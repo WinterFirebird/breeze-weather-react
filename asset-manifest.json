@@ -1,26 +1,26 @@
 {
   "files": {
     "main.css": "/breeze-weather-react/static/css/main.673b7711.chunk.css",
-    "main.js": "/breeze-weather-react/static/js/main.98949b83.chunk.js",
-    "main.js.map": "/breeze-weather-react/static/js/main.98949b83.chunk.js.map",
-    "runtime-main.js": "/breeze-weather-react/static/js/runtime-main.7e0ea228.js",
-    "runtime-main.js.map": "/breeze-weather-react/static/js/runtime-main.7e0ea228.js.map",
+    "main.js": "/breeze-weather-react/static/js/main.8232e0be.chunk.js",
+    "main.js.map": "/breeze-weather-react/static/js/main.8232e0be.chunk.js.map",
+    "runtime-main.js": "/breeze-weather-react/static/js/runtime-main.08412723.js",
+    "runtime-main.js.map": "/breeze-weather-react/static/js/runtime-main.08412723.js.map",
     "static/css/2.746c67a2.chunk.css": "/breeze-weather-react/static/css/2.746c67a2.chunk.css",
-    "static/js/2.0fdc45af.chunk.js": "/breeze-weather-react/static/js/2.0fdc45af.chunk.js",
-    "static/js/2.0fdc45af.chunk.js.map": "/breeze-weather-react/static/js/2.0fdc45af.chunk.js.map",
-    "static/js/3.9a1e0bcd.chunk.js": "/breeze-weather-react/static/js/3.9a1e0bcd.chunk.js",
-    "static/js/3.9a1e0bcd.chunk.js.map": "/breeze-weather-react/static/js/3.9a1e0bcd.chunk.js.map",
+    "static/js/2.2267e564.chunk.js": "/breeze-weather-react/static/js/2.2267e564.chunk.js",
+    "static/js/2.2267e564.chunk.js.map": "/breeze-weather-react/static/js/2.2267e564.chunk.js.map",
+    "static/js/3.d0f18615.chunk.js": "/breeze-weather-react/static/js/3.d0f18615.chunk.js",
+    "static/js/3.d0f18615.chunk.js.map": "/breeze-weather-react/static/js/3.d0f18615.chunk.js.map",
     "index.html": "/breeze-weather-react/index.html",
     "static/css/2.746c67a2.chunk.css.map": "/breeze-weather-react/static/css/2.746c67a2.chunk.css.map",
     "static/css/main.673b7711.chunk.css.map": "/breeze-weather-react/static/css/main.673b7711.chunk.css.map",
-    "static/js/2.0fdc45af.chunk.js.LICENSE.txt": "/breeze-weather-react/static/js/2.0fdc45af.chunk.js.LICENSE.txt",
+    "static/js/2.2267e564.chunk.js.LICENSE.txt": "/breeze-weather-react/static/js/2.2267e564.chunk.js.LICENSE.txt",
     "static/media/semantic.min.css": "/breeze-weather-react/static/media/outline-icons.ddae9b1b.woff"
   },
   "entrypoints": [
-    "static/js/runtime-main.7e0ea228.js",
+    "static/js/runtime-main.08412723.js",
     "static/css/2.746c67a2.chunk.css",
-    "static/js/2.0fdc45af.chunk.js",
+    "static/js/2.2267e564.chunk.js",
     "static/css/main.673b7711.chunk.css",
-    "static/js/main.98949b83.chunk.js"
+    "static/js/main.8232e0be.chunk.js"
   ]
 }
