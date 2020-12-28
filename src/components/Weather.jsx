@@ -3,6 +3,7 @@ import CurrentWeatherWidget from './CurrentWeatherWidget';
 import axios from 'axios';
 import HourlyWeatherWidget from './HourlyWeatherWidget';
 import DailyWeatherWidget from './DailyWeatherWidget';
+import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Weather extends Component {
@@ -10,8 +11,9 @@ class Weather extends Component {
     super(props)
     
     this.state = {
-      apiRequestReady:false,
-      imperial:false,
+      preciseLocation: false,
+      weatherInfoReady: false,
+      imperial: false,
       location: {
         latitude: null,
         longitude: null,
@@ -49,7 +51,7 @@ class Weather extends Component {
 
   getLocationFromIP = () => {
     console.log(`response of IP api request below`);
-    axios.get('http://ip-api.com/json/')
+    axios.get('https://ipapi.co/json/')
     .then(response => {
       console.log(response);
       this.setLocation(response, 'ip');
@@ -63,19 +65,22 @@ class Weather extends Component {
   }
 
   setLocation = (position, from) => {
-    let latt, long;
+    let latt, long, preciseLocation;
     console.log('position')
     console.log(position)
     if(from === 'ip') {
-      latt = position.data.lat;
-      long = position.data.lon;
+      latt = position.data.latitude;
+      long = position.data.longitude;
+      preciseLocation = false;
     } else {
       latt = position.coords.latitude;
       long = position.coords.longitude;
+      preciseLocation = true;
     }
     
     console.log(`lat: ${latt}, long: ${long}`);
     this.setState({
+      preciseLocation: preciseLocation,
       location: {
         latitude: latt,
         longitude: long,
@@ -141,7 +146,7 @@ class Weather extends Component {
 
     //state update
     this.setState({
-      apiRequestReady: true,
+      weatherInfoReady: true,
       currentWeather: currentWeatherObject,
       hourlyWeather: hourlyWeatherArray,
       dailyWeather: dailyWeatherArray
@@ -171,24 +176,41 @@ class Weather extends Component {
 
   componentDidMount() {
 
-    this.getLocationFromIP()
-    this.callApi();
+    this.getLocationFromIP();
         
   }
     
   render() {
-    return (
-      <div>
-        <CurrentWeatherWidget 
-          city={this.state.location.city} country={this.state.location.country} displayName={this.state.location.displayName}
-          temp={this.state.currentWeather.temp} main={this.state.currentWeather.weatherMain} humidity={this.state.currentWeather.humidity} icon={this.state.currentWeather.icon}
-          imperial={this.state.imperial}
-          locationHandler={this.getLocationFromNavigator}
-        />
-        <HourlyWeatherWidget weather={this.state.hourlyWeather} imperial={this.state.imperial} />
-        <DailyWeatherWidget weather={this.state.dailyWeather} imperial={this.state.imperial} />
-      </div>
-    );
+    if(this.state.weatherInfoReady) {
+      return (
+        <div>
+          <CurrentWeatherWidget 
+            city={this.state.location.city} country={this.state.location.country} displayName={this.state.location.displayName}
+            temp={this.state.currentWeather.temp} main={this.state.currentWeather.weatherMain} humidity={this.state.currentWeather.humidity} icon={this.state.currentWeather.icon}
+            imperial={this.state.imperial}
+            locationHandler={this.getLocationFromNavigator} preciseLocation={this.state.preciseLocation}
+          />
+          <HourlyWeatherWidget weather={this.state.hourlyWeather} imperial={this.state.imperial} />
+          <DailyWeatherWidget weather={this.state.dailyWeather} imperial={this.state.imperial} />
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Segment style={{width: '100vw', height: '100vh'}}>
+            <Dimmer active inverted>
+              <Loader indeterminate inverted>
+                <h1>Please wait...</h1>
+                <h3>Fetching data</h3>
+                <h4>If it's stuck, try turning off an ad-blocking software</h4>
+              </Loader>
+            </Dimmer>
+    
+            <Image src='/images/wireframe/short-paragraph.png' />
+          </Segment>
+        </div>
+      )
+    }
   }
 }
 

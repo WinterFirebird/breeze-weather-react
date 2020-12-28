@@ -35,12 +35,14 @@ class CurrentWeatherWidget extends Component {
   
   
   render() {
-    const { city, country, displayName, temp, main, humidity, icon, imperial, locationHandler } = this.props;
+    const { city, country, displayName, temp, main, humidity, icon, imperial, locationHandler, preciseLocation } = this.props;
     return (
       <this.Weather>
+        {preciseLocation ? <this.TransparentButton onClick={locationHandler} disabled style={{opacity: '0.7'}}>Use precise location <Icon name="location arrow" /></this.TransparentButton> : 
         <this.TransparentButton onClick={locationHandler}>Use precise location <Icon name="location arrow" /></this.TransparentButton>
+        }
         { city? <h1>{city}, {country}</h1> : <h1>{displayName}</h1> }
-        <img src={` http://openweathermap.org/img/wn/${icon}@2x.png`} />
+        <img src={`http://openweathermap.org/img/wn/${icon}@2x.png`} />
         <div>
           <h2>{imperial ? `${convertKelvinTo(temp, 'f')} °F` : `${convertKelvinTo(temp, 'c')}°C`}</h2>
           <h2>{main}</h2>
