@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {dateDaysFromNow} from './getDate'
-import { convertKelvinTo } from './tempConvert';
 import styled from 'styled-components';
+import { dateDaysFromNow } from './getDate';
+import { convertKelvinTo } from './tempConvert';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class DailyWeatherWidget extends Component {
@@ -13,7 +13,7 @@ class DailyWeatherWidget extends Component {
       margin-left: auto;
       margin-right: auto;
     `;
-  
+
     this.WeatherWrapper = styled.div`
       display: flex;
       justify-content: flex-start;
@@ -25,29 +25,31 @@ class DailyWeatherWidget extends Component {
   }
 
   render() {
-    let jsxArray = this.props.weather.map((item, index) => {
+    const { weather, imperial } = this.props;
+    const jsxArray = weather.map((item, index) => {
       const date = dateDaysFromNow(index);
-      
-      let temp = {
-        day: ( this.props.imperial ? `${convertKelvinTo(item.temp.day, 'f')} °F` : `${convertKelvinTo(item.temp.day, 'c')} °C` ),
-        night: ( this.props.imperial ? `${convertKelvinTo(item.temp.night, 'f')} °F` : `${convertKelvinTo(item.temp.night, 'c')} °C` ),
-      }
+
+      const temp = {
+        day: (imperial ? `${convertKelvinTo(item.temp.day, 'f')} °F` : `${convertKelvinTo(item.temp.day, 'c')} °C`),
+        night: (imperial ? `${convertKelvinTo(item.temp.night, 'f')} °F` : `${convertKelvinTo(item.temp.night, 'c')} °C`),
+      };
+
       return (
-        <div key={index} style={{padding: '10px'}}>
-          <h4>🔆{temp.day} /🌙 {temp.night}</h4>
-          <h4 style={{whiteSpace: 'pre-wrap'}}>{date}</h4>
+        <div key={index} style={{ padding: '10px' }}>
+          <h4 style={{ whiteSpace: 'nowrap'}}>🔆{temp.day} /🌙 {temp.night}</h4>
+          <h4 style={{ whiteSpace: 'pre-wrap' }}>{date}</h4>
         </div>
-      )
+      );
     });
 
     return (
       <this.Weather>
-        <h2 style={{textAlign: 'left'}}>Daily</h2>
+        <h2 style={{ textAlign: 'left' }}>Daily</h2>
         <this.WeatherWrapper>
-          {jsxArray ? jsxArray : null}
+          {jsxArray || null}
         </this.WeatherWrapper>
       </this.Weather>
-    )
+    );
   }
 }
 

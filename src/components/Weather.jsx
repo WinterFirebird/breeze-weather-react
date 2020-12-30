@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
+import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
+import { getLocationFromIP, getLocationFromNavigator } from './getLocation';
+import { callReverseGeocodingApi, callWeatherApi } from './callApi';
 import CurrentWeatherWidget from './CurrentWeatherWidget';
-import axios from 'axios';
 import HourlyWeatherWidget from './HourlyWeatherWidget';
 import DailyWeatherWidget from './DailyWeatherWidget';
-import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Weather extends Component {
   constructor(props) {
-    super(props)
-    
+    super(props);
+
     this.state = {
       preciseLocation: false,
       weatherInfoReady: false,
@@ -24,16 +25,19 @@ class Weather extends Component {
       },
       currentWeather: {
         temp: null,
+        feelsLike: null,
         weatherMain: null,
         humidity: null,
+        sunrise: null,
+        sunset: null,
         icon: null,
       },
       hourlyWeather: [
         {
           temp: null,
-          weatherMain:  null,
+          weatherMain: null,
           icon: null,
-        }
+        },
       ],
       dailyWeather: [
         {
@@ -44,94 +48,77 @@ class Weather extends Component {
           weatherMain: null,
           humidity: null,
           icon: null,
-        }
-      ]
-    }
+        },
+      ],
+    };
   }
 
-  getLocationFromIP = () => {
-    console.log(`response of IP api request below`);
-    axios.get('https://ipapi.co/json/')
-    .then(response => {
-      console.log(response);
-      this.setLocation(response, 'ip');
-      console.log(`response of IP api request above`);
-    })
-    .catch(err => console.log(err));
-  };
-
-  getLocationFromNavigator = () => {
-    window.navigator.geolocation.getCurrentPosition(this.setLocation);
+  componentDidMount() {
+    getLocationFromIP(this.updateStateLocation);
   }
 
-  setLocation = (position, from) => {
-    let latt, long, preciseLocation;
-    console.log('position')
-    console.log(position)
-    if(from === 'ip') {
-      latt = position.data.latitude;
-      long = position.data.longitude;
-      preciseLocation = false;
-    } else {
-      latt = position.coords.latitude;
-      long = position.coords.longitude;
-      preciseLocation = true;
-    }
-    
-    console.log(`lat: ${latt}, long: ${long}`);
+  /**
+   * updates the location in the state of the component
+   * @param {number} latitude 
+   * @param {number} longitude 
+   * @param {boolean} preciseLocation 
+   */
+  updateStateLocation = (latitude, longitude, preciseLocation) => {
     this.setState({
-      preciseLocation: preciseLocation,
+      preciseLocation,
       location: {
-        latitude: latt,
-        longitude: long,
-      }
+        latitude,
+        longitude,
+      },
     });
 
-    this.callApi();
-  };
-
-  callApi = () => {
-    console.log('callApi called')
-    axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${this.state.location.latitude}&lon=${this.state.location.longitude}&&appid=997d9b54abada6ff84291820778b192d`)
-    .then(response => this.handleOneCallResponse(response))
-    .catch(err => console.log(err));
-
-    axios.get(`https://us1.locationiq.com/v1/reverse.php?key=pk.026f9b5e94ef539558116a8c355cd29f&lat=${this.state.location.latitude}&lon=${this.state.location.longitude}&zoom=10&format=json`)
-    .then(response => this.handleLocationResponse(response))
-    .catch(err => console.log(err));
+    this.updateWeather();
   }
 
-  handleOneCallResponse = (response) => {
-    console.log("the response from openweathermap api below");
-    console.log(response);
-    console.log("the response from openweathermap api above");
+  /**
+   * updates the weather and place names with the present geocoordinates in the component state
+   */
+  updateWeather = () => {
+    const { latitude, longitude } = this.state.location;
+    callWeatherApi(this.handleWeatherResponse, latitude, longitude);
+    callReverseGeocodingApi(this.handleReverseGeocodingResponse, latitude, longitude);
+  }
 
-    //current weather config
-    let currentWeatherObject = {
-      temp: response.data.current.temp,
-      weatherMain: response.data.current.weather[0].main,
-      humidity: response.data.current.humidity,
-      icon: response.data.current.weather[0].icon,
+  /**
+   * processes the response from weather api and updates the state
+   * @param {object} response 
+   */
+  handleWeatherResponse = (response) => {
+    //  current weather config
+    const { temp, feels_like, weather, humidity, sunrise, sunset } = response.data.current;
+    const currentWeatherObject = {
+      temp,
+      feelsLike: feels_like,
+      weatherMain: weather[0].main,
+      humidity,
+      icon: weather[0].icon,
+      sunrise,
+      sunset,
     };
 
-    //hourly weather config
-    let hourlyWeatherArray = [];
+    //  hourly weather config
+    const hourlyWeatherArray = [];
     response.data.hourly.forEach(nthHour => {
-      if(response.data.hourly.indexOf(nthHour) < 24) {
-        let hour = {
+      if (response.data.hourly.indexOf(nthHour) < 24) {
+        const hour = {
           temp: nthHour.temp,
           weatherMain: nthHour.weather[0].main,
           icon: nthHour.weather[0].icon,
-        }
-        hourlyWeatherArray.push(hour)
+        };
+        hourlyWeatherArray.push(hour);
       }
     });
 
-    //daily weather config
-    let dailyWeatherArray = [];
+    //  daily weather config
+    const dailyWeatherArray = [];
     response.data.daily.forEach(nthDay => {
-      if(response.data.daily.indexOf(nthDay) < 8) {
-        let day = {
+      if (response.data.daily.indexOf(nthDay) < 8) {
+        const day = {
           temp: {
             day: nthDay.temp.day,
             night: nthDay.temp.night,
@@ -139,79 +126,77 @@ class Weather extends Component {
           weatherMain: nthDay.weather[0].main,
           humidity: nthDay.humidity,
           icon: nthDay.weather[0].icon,
-        }
-        dailyWeatherArray.push(day)
+        };
+        dailyWeatherArray.push(day);
       }
-    })
+    });
 
-    //state update
+    //  state update
     this.setState({
       weatherInfoReady: true,
       currentWeather: currentWeatherObject,
       hourlyWeather: hourlyWeatherArray,
-      dailyWeather: dailyWeatherArray
-    })
-
+      dailyWeather: dailyWeatherArray,
+    });
   }
 
-  handleLocationResponse = (response) => {
-    console.log("the response from locationIq api below");
-    console.log(response);
-    console.log("the response from locationIq api above");
-
-    const {lat, lon, address, display_name} = response.data;
+  /**
+   * processes the response from reverse geocoding api and updates the state
+   * @param {object} response 
+   */
+  handleReverseGeocodingResponse = (response) => {
+    const { lat, lon, address, display_name } = response.data;
 
     this.setState(
       {
         location: {
           latitude: lat,
-          longitude:  lon,
-          city: (address.city? address.city : null),
+          longitude: lon,
+          city: (address.city ? address.city : null),
           country: address.country,
           displayName: display_name,
-        }
-      }
-    )
+        },
+      },
+    );
   }
 
-  componentDidMount() {
-
-    this.getLocationFromIP();
-        
-  }
-    
   render() {
-    if(this.state.weatherInfoReady) {
+    const { weatherInfoReady, imperial, preciseLocation, hourlyWeather, dailyWeather } = this.state;
+    const { city, country, displayName } = this.state.location;
+    const { temp, feelsLike, weatherMain, humidity, icon, sunrise, sunset } = this.state.currentWeather;
+
+    if (weatherInfoReady) {
       return (
         <div>
-          <CurrentWeatherWidget 
-            city={this.state.location.city} country={this.state.location.country} displayName={this.state.location.displayName}
-            temp={this.state.currentWeather.temp} main={this.state.currentWeather.weatherMain} humidity={this.state.currentWeather.humidity} icon={this.state.currentWeather.icon}
-            imperial={this.state.imperial}
-            locationHandler={this.getLocationFromNavigator} preciseLocation={this.state.preciseLocation}
+          <CurrentWeatherWidget
+            city={city} country={country} displayName={displayName}
+            temp={temp} feelsLike={feelsLike} main={weatherMain}
+            humidity={humidity} icon={icon}
+            sunrise={sunrise} sunset={sunset}
+            imperial={imperial}
+            locationHandler={() => getLocationFromNavigator(this.updateStateLocation)} preciseLocation={preciseLocation}
           />
-          <HourlyWeatherWidget weather={this.state.hourlyWeather} imperial={this.state.imperial} />
-          <DailyWeatherWidget weather={this.state.dailyWeather} imperial={this.state.imperial} />
+          <HourlyWeatherWidget weather={hourlyWeather} imperial={imperial} />
+          <DailyWeatherWidget weather={dailyWeather} imperial={imperial} />
         </div>
       );
     } else {
       return (
         <div>
-          <Segment style={{width: '100vw', height: '100vh'}}>
+          <Segment style={{ width: '100vw', height: '100vh' }}>
             <Dimmer active inverted>
               <Loader indeterminate inverted>
                 <h1>Please wait...</h1>
                 <h3>Fetching data</h3>
-                <h4>If it's stuck, try turning off an ad-blocking software</h4>
+                <h4>Stuck? Try turning off an ad-blocking software</h4>
               </Loader>
             </Dimmer>
-    
             <Image src='/images/wireframe/short-paragraph.png' />
           </Segment>
         </div>
-      )
+      );
     }
   }
 }
 
-export default Weather
+export default Weather;
