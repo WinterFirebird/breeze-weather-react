@@ -1,7 +1,7 @@
 {
   "homepage": "https://winterfirebird.github.io/breeze-weather-react",
   "name": "breeze-weather",
-  "version": "0.1.0",
+  "version": "0.9alpha",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.6",
