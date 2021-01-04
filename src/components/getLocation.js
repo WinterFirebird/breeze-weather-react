@@ -22,7 +22,7 @@ export const getLocationFromIP = (callback) => {
 export const getLocationFromNavigator = (callback) => {
   const navigatorResponseHandler = (responseFromNavigator) => {
     const { latitude, longitude } = responseFromNavigator.coords;
-    callback(latitude, longitude, false);
+    callback(latitude, longitude, true);
   };
   window.navigator.geolocation.getCurrentPosition(navigatorResponseHandler);
 };

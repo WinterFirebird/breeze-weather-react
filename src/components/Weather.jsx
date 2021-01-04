@@ -54,16 +54,16 @@ class Weather extends Component {
   }
 
   componentDidMount() {
-    getLocationFromIP(this.updateStateLocation);
+    getLocationFromIP(this.updateLocationAndWeather);
   }
 
   /**
-   * updates the location in the state of the component
+   * updates the location in the state of the component and triggers weather update
    * @param {number} latitude 
    * @param {number} longitude 
    * @param {boolean} preciseLocation 
    */
-  updateStateLocation = (latitude, longitude, preciseLocation) => {
+  updateLocationAndWeather = (latitude, longitude, preciseLocation) => {
     this.setState({
       preciseLocation,
       location: {
@@ -89,7 +89,7 @@ class Weather extends Component {
    * @param {object} response 
    */
   handleWeatherResponse = (response) => {
-    //  current weather config
+    //  current weather object
     const { temp, feels_like, weather, humidity, sunrise, sunset } = response.data.current;
     const currentWeatherObject = {
       temp,
@@ -101,7 +101,7 @@ class Weather extends Component {
       sunset,
     };
 
-    //  hourly weather config
+    //  hourly weather array
     const hourlyWeatherArray = [];
     response.data.hourly.forEach(nthHour => {
       if (response.data.hourly.indexOf(nthHour) < 24) {
@@ -114,7 +114,7 @@ class Weather extends Component {
       }
     });
 
-    //  daily weather config
+    //  daily weather array
     const dailyWeatherArray = [];
     response.data.daily.forEach(nthDay => {
       if (response.data.daily.indexOf(nthDay) < 8) {
@@ -141,7 +141,7 @@ class Weather extends Component {
   }
 
   /**
-   * processes the response from reverse geocoding api and updates the state
+   * processes the response from reverse geocoding api and updates the state with the new location
    * @param {object} response 
    */
   handleReverseGeocodingResponse = (response) => {
@@ -174,7 +174,7 @@ class Weather extends Component {
             humidity={humidity} icon={icon}
             sunrise={sunrise} sunset={sunset}
             imperial={imperial}
-            locationHandler={() => getLocationFromNavigator(this.updateStateLocation)} preciseLocation={preciseLocation}
+            locationHandler={() => getLocationFromNavigator(this.updateLocationAndWeather)} preciseLocation={preciseLocation}
           />
           <HourlyWeatherWidget weather={hourlyWeather} imperial={imperial} />
           <DailyWeatherWidget weather={dailyWeather} imperial={imperial} />
@@ -187,6 +187,7 @@ class Weather extends Component {
             <Dimmer active inverted>
               <Loader indeterminate inverted>
                 <h1>Please wait...</h1>
+                <hr/>
                 <h3>Fetching data</h3>
                 <h4>Stuck? Try turning off an ad-blocking software</h4>
               </Loader>
