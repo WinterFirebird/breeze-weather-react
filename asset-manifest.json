@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/breeze-weather-react/static/css/main.020cc3ae.chunk.css",
-    "main.js": "/breeze-weather-react/static/js/main.47cbab8e.chunk.js",
-    "main.js.map": "/breeze-weather-react/static/js/main.47cbab8e.chunk.js.map",
+    "main.js": "/breeze-weather-react/static/js/main.aaee737f.chunk.js",
+    "main.js.map": "/breeze-weather-react/static/js/main.aaee737f.chunk.js.map",
     "runtime-main.js": "/breeze-weather-react/static/js/runtime-main.966bd931.js",
     "runtime-main.js.map": "/breeze-weather-react/static/js/runtime-main.966bd931.js.map",
     "static/css/2.746c67a2.chunk.css": "/breeze-weather-react/static/css/2.746c67a2.chunk.css",
-    "static/js/2.840d124b.chunk.js": "/breeze-weather-react/static/js/2.840d124b.chunk.js",
-    "static/js/2.840d124b.chunk.js.map": "/breeze-weather-react/static/js/2.840d124b.chunk.js.map",
+    "static/js/2.bf53b654.chunk.js": "/breeze-weather-react/static/js/2.bf53b654.chunk.js",
+    "static/js/2.bf53b654.chunk.js.map": "/breeze-weather-react/static/js/2.bf53b654.chunk.js.map",
     "static/js/3.c5839479.chunk.js": "/breeze-weather-react/static/js/3.c5839479.chunk.js",
     "static/js/3.c5839479.chunk.js.map": "/breeze-weather-react/static/js/3.c5839479.chunk.js.map",
     "index.html": "/breeze-weather-react/index.html",
     "static/css/2.746c67a2.chunk.css.map": "/breeze-weather-react/static/css/2.746c67a2.chunk.css.map",
     "static/css/main.020cc3ae.chunk.css.map": "/breeze-weather-react/static/css/main.020cc3ae.chunk.css.map",
-    "static/js/2.840d124b.chunk.js.LICENSE.txt": "/breeze-weather-react/static/js/2.840d124b.chunk.js.LICENSE.txt",
+    "static/js/2.bf53b654.chunk.js.LICENSE.txt": "/breeze-weather-react/static/js/2.bf53b654.chunk.js.LICENSE.txt",
     "static/media/01d1.91f8e307.jpg": "/breeze-weather-react/static/media/01d1.91f8e307.jpg",
     "static/media/01d2.1ac6574c.png": "/breeze-weather-react/static/media/01d2.1ac6574c.png",
     "static/media/01n1.e17fe806.jpg": "/breeze-weather-react/static/media/01n1.e17fe806.jpg",
@@ -56,8 +56,8 @@
   "entrypoints": [
     "static/js/runtime-main.966bd931.js",
     "static/css/2.746c67a2.chunk.css",
-    "static/js/2.840d124b.chunk.js",
+    "static/js/2.bf53b654.chunk.js",
     "static/css/main.020cc3ae.chunk.css",
-    "static/js/main.47cbab8e.chunk.js"
+    "static/js/main.aaee737f.chunk.js"
   ]
 }
