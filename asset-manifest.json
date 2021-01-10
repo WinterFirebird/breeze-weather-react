@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/breeze-weather-react/static/css/main.020cc3ae.chunk.css",
-    "main.js": "/breeze-weather-react/static/js/main.13b49524.chunk.js",
-    "main.js.map": "/breeze-weather-react/static/js/main.13b49524.chunk.js.map",
+    "main.js": "/breeze-weather-react/static/js/main.2b67ca4c.chunk.js",
+    "main.js.map": "/breeze-weather-react/static/js/main.2b67ca4c.chunk.js.map",
     "runtime-main.js": "/breeze-weather-react/static/js/runtime-main.966bd931.js",
     "runtime-main.js.map": "/breeze-weather-react/static/js/runtime-main.966bd931.js.map",
     "static/css/2.746c67a2.chunk.css": "/breeze-weather-react/static/css/2.746c67a2.chunk.css",
@@ -58,7 +58,7 @@
     "static/media/13n2.b6ce9cd0.png": "/breeze-weather-react/static/media/13n2.b6ce9cd0.png",
     "static/media/50d1.54250735.jpg": "/breeze-weather-react/static/media/50d1.54250735.jpg",
     "static/media/50d2.9316a546.png": "/breeze-weather-react/static/media/50d2.9316a546.png",
-    "static/media/50n1.1ededb24.jpg": "/breeze-weather-react/static/media/50n1.1ededb24.jpg",
+    "static/media/50n1.7b1ddee9.jpg": "/breeze-weather-react/static/media/50n1.7b1ddee9.jpg",
     "static/media/50n2.9316a546.png": "/breeze-weather-react/static/media/50n2.9316a546.png",
     "static/media/semantic.min.css": "/breeze-weather-react/static/media/outline-icons.ddae9b1b.woff",
     "static/media/eye.423ef4b4.png": "/breeze-weather-react/static/media/eye.423ef4b4.png"
@@ -68,6 +68,6 @@
     "static/css/2.746c67a2.chunk.css",
     "static/js/2.bf53b654.chunk.js",
     "static/css/main.020cc3ae.chunk.css",
-    "static/js/main.13b49524.chunk.js"
+    "static/js/main.2b67ca4c.chunk.js"
   ]
 }
