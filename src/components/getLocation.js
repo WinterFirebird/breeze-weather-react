@@ -23,6 +23,7 @@ export const getLocationFromNavigator = (callback) => {
   const navigatorResponseHandler = (responseFromNavigator) => {
     const { latitude, longitude } = responseFromNavigator.coords;
     callback(latitude, longitude, true);
+    // setTimeout(callback(52.229675, 21.012230, true), 4000)
   };
   window.navigator.geolocation.getCurrentPosition(navigatorResponseHandler);
 };

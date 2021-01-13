@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
+import styled from 'styled-components';
 import { getLocationFromIP, getLocationFromNavigator } from './getLocation';
 import { callReverseGeocodingApi, callWeatherApi } from './callApi';
-import CurrentWeatherWidget from './CurrentWeatherWidget';
+import Background from './Background';
+import CurrentWeatherMain from './CurrentWeatherMain';
+import CurrentWeatherExtra from './CurrentWeatherExtra';
 import HourlyWeatherWidget from './HourlyWeatherWidget';
 import DailyWeatherWidget from './DailyWeatherWidget';
+
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Weather extends Component {
@@ -28,6 +32,9 @@ class Weather extends Component {
         feelsLike: null,
         weatherMain: null,
         humidity: null,
+        pressure: null,
+        windSpeed: null,
+        visibility: null,
         sunrise: null,
         sunset: null,
         icon: null,
@@ -89,13 +96,17 @@ class Weather extends Component {
    * @param {object} response 
    */
   handleWeatherResponse = (response) => {
+    console.log(response);
     //  current weather object
-    const { temp, feels_like, weather, humidity, sunrise, sunset } = response.data.current;
+    const { temp, feels_like, weather, humidity, pressure, visibility, wind_speed, sunrise, sunset } = response.data.current;
     const currentWeatherObject = {
       temp,
       feelsLike: feels_like,
       weatherMain: weather[0].main,
       humidity,
+      pressure,
+      windSpeed: wind_speed,
+      visibility,
       icon: weather[0].icon,
       sunrise,
       sunset,
@@ -163,27 +174,31 @@ class Weather extends Component {
   render() {
     const { weatherInfoReady, imperial, preciseLocation, hourlyWeather, dailyWeather } = this.state;
     const { city, country, displayName } = this.state.location;
-    const { temp, feelsLike, weatherMain, humidity, icon, sunrise, sunset } = this.state.currentWeather;
+    const { temp, feelsLike, weatherMain, humidity, pressure, visibility, windSpeed, icon, sunrise, sunset } = this.state.currentWeather;
 
     if (weatherInfoReady) {
       return (
-        <div>
-          <CurrentWeatherWidget
+        <>
+          <Background displayName={String(displayName)} icon={icon} />
+          <CurrentWeatherMain
             city={city} country={country} displayName={displayName}
             temp={temp} feelsLike={feelsLike} main={weatherMain}
-            humidity={humidity} icon={icon}
-            sunrise={sunrise} sunset={sunset}
+            icon={icon}
             imperial={imperial}
             locationHandler={() => getLocationFromNavigator(this.updateLocationAndWeather)} preciseLocation={preciseLocation}
           />
           <HourlyWeatherWidget weather={hourlyWeather} imperial={imperial} />
+          <CurrentWeatherExtra
+            humidity={humidity} pressure={pressure} visibility={visibility} windSpeed={windSpeed}
+            sunrise={sunrise} sunset={sunset}
+            imperial={imperial}
+          />
           <DailyWeatherWidget weather={dailyWeather} imperial={imperial} />
-        </div>
+        </>
       );
     } else {
       return (
-        <div>
-          <Segment style={{ width: '100vw', height: '100vh' }}>
+          <Segment style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh' }}>
             <Dimmer active inverted>
               <Loader indeterminate inverted>
                 <h1>Please wait...</h1>
@@ -194,7 +209,6 @@ class Weather extends Component {
             </Dimmer>
             <Image src='/images/wireframe/short-paragraph.png' />
           </Segment>
-        </div>
       );
     }
   }

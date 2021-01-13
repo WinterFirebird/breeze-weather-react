@@ -21,7 +21,7 @@ export const callWeatherApi = (callback, latitude, longitude) => {
  * @param {number} longitude 
  */
 export const callReverseGeocodingApi = (callback, latitude, longitude) => {
-  axios.get(`https://us1.locationiq.com/v1/reverse.php?key=pk.026f9b5e94ef539558116a8c355cd29f&lat=${latitude}&lon=${longitude}&zoom=10&format=json`)
+  axios.get(`https://us1.locationiq.com/v1/reverse.php?key=pk.026f9b5e94ef539558116a8c355cd29f&lat=${latitude}&lon=${longitude}&zoom=10&accept-language=en&format=json`)
     .then(response => callback(response))
     .catch(error => {
       console.log(`Error happened while calling the API: \n ${error}`)

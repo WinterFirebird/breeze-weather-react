@@ -2,53 +2,91 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { hoursHoursFromNow } from './getDate';
 import { convertKelvinTo } from './tempConvert';
+import { mainIcons } from './media';
+
+const Wrapper = styled.div`
+  grid-area: hourly;
+  width: 100%;
+  padding: 0 30px 40px 30px;
+  overflow-x: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  };
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  @media screen and (max-width: 768px) {
+    > h2 {
+      display: none;
+    }
+  }
+`;
+
+const HourlyWeather = styled.div`
+  padding-bottom: 12px;
+  display: grid;
+  grid-gap: 14px;
+  grid-template-rows: auto;
+  grid-auto-columns: auto;
+  grid-auto-flow: column;
+  overflow-x: scroll;
+  img {
+    width: 64px;
+    @media screen and (min-width: 1024px) {
+      width: 48px;
+    }
+  };
+  @media screen and (min-width: 1024px) {
+    grid-auto-flow: row;
+    > div {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid white;
+      > div {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        > * {
+          margin: 4px;
+        }
+      }
+    }
+  }
+}
+`;
+
+const Element = styled.div`
+  padding: '10px';
+`;
 
 // eslint-disable-next-line react/prefer-stateless-function
 class HourlyWeatherWidget extends Component {
-  constructor(props) {
-    super(props);
-
-    this.Weather = styled.div`
-      max-width: 70%;
-      margin-left: auto;
-      margin-right: auto;
-    `;
-
-    this.WeatherWrapper = styled.div`
-      display: flex;
-      justify-content: flex-start;
-      width: 100%;
-      padding: 10px;
-      margin: 20px auto 10px auto;
-      overflow-x: scroll;
-    `;
-  }
-
   render() {
     const { weather, imperial } = this.props;
     const jsxArray = weather.map((item, index) => {
       const hour = hoursHoursFromNow(index);
+      const mainIconSource = mainIcons[`m${item.icon}`];
+      const mainText = item.weatherMain;
+      const temp = imperial ? `${convertKelvinTo(item.temp, 'f')} °F` : `${convertKelvinTo(item.temp, 'c')} °C`;
 
       return (
-        <div key={index} style={{ padding: '10px' }}>
-          <h4>
-            {imperial ? `${convertKelvinTo(item.temp, 'f')} °F` : `${convertKelvinTo(item.temp, 'c')} °C`}
-          </h4>
-          <img src={`http://openweathermap.org/img/wn/${item.icon}.png`} alt={`${item.weatherMain} icon`} />
-          <h4>{item.weatherMain}</h4>
-          <hr />
+        <Element key={index}>
           <h4>{hour}</h4>
-        </div>
+          <div>
+            <img src={mainIconSource} alt={`${mainText} icon`} />
+            <h4>{mainText}</h4>
+            <h4>{temp}</h4>
+          </div>
+        </Element>
       );
     });
 
     return (
-      <this.Weather>
-        <h2 style={{ textAlign: 'left' }}>Hourly</h2>
-        <this.WeatherWrapper>
+      <Wrapper>
+        <h2>hourly forecast</h2>
+        <HourlyWeather>
           {jsxArray || null}
-        </this.WeatherWrapper>
-      </this.Weather>
+        </HourlyWeather>
+      </Wrapper>
     );
   }
 }
