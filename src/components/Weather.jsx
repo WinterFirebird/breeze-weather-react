@@ -1,10 +1,31 @@
 import React, { Component } from 'react';
-import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
+import styled from 'styled-components';
+import { ToastContainer, toast } from 'react-toastify';
 import { getLocationFromIP, getLocationFromNavigator } from './getLocation';
-import { callReverseGeocodingApi, callWeatherApi } from './callApi';
-import CurrentWeatherWidget from './CurrentWeatherWidget';
+import { callReverseGeocodingApi, callWeatherApi } from './apiCalls';
+import CustomLoader from './CustomLoader';
+import Background from './Background';
+import CurrentWeatherMain from './CurrentWeatherMain';
+import CurrentWeatherExtraWidget from './CurrentWeatherExtraWidget';
 import HourlyWeatherWidget from './HourlyWeatherWidget';
 import DailyWeatherWidget from './DailyWeatherWidget';
+
+/**
+ * triggers a toast notification with the specified title and message
+ * @param {string} title 
+ * @param {string} message 
+ */
+export const toaster = (title, message) => {
+  toast.error(`${title}\n ${message}`, {
+    position: "bottom-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    });
+};
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Weather extends Component {
@@ -12,8 +33,10 @@ class Weather extends Component {
     super(props);
 
     this.state = {
+      locationResponseReady: false,
+      weatherResponseReady: false,
+      reverseGeocodingResponseReady: false,
       preciseLocation: false,
-      weatherInfoReady: false,
       imperial: false,
       location: {
         latitude: null,
@@ -28,6 +51,9 @@ class Weather extends Component {
         feelsLike: null,
         weatherMain: null,
         humidity: null,
+        pressure: null,
+        windSpeed: null,
+        visibility: null,
         sunrise: null,
         sunset: null,
         icon: null,
@@ -65,6 +91,7 @@ class Weather extends Component {
    */
   updateLocationAndWeather = (latitude, longitude, preciseLocation) => {
     this.setState({
+      locationResponseReady: true,
       preciseLocation,
       location: {
         latitude,
@@ -90,12 +117,15 @@ class Weather extends Component {
    */
   handleWeatherResponse = (response) => {
     //  current weather object
-    const { temp, feels_like, weather, humidity, sunrise, sunset } = response.data.current;
+    const { temp, feels_like, weather, humidity, pressure, visibility, wind_speed, sunrise, sunset } = response.data.current;
     const currentWeatherObject = {
       temp,
       feelsLike: feels_like,
       weatherMain: weather[0].main,
       humidity,
+      pressure,
+      windSpeed: wind_speed,
+      visibility,
       icon: weather[0].icon,
       sunrise,
       sunset,
@@ -133,7 +163,7 @@ class Weather extends Component {
 
     //  state update
     this.setState({
-      weatherInfoReady: true,
+      weatherResponseReady: true,
       currentWeather: currentWeatherObject,
       hourlyWeather: hourlyWeatherArray,
       dailyWeather: dailyWeatherArray,
@@ -149,6 +179,7 @@ class Weather extends Component {
 
     this.setState(
       {
+        reverseGeocodingResponseReady: true,
         location: {
           latitude: lat,
           longitude: lon,
@@ -161,40 +192,42 @@ class Weather extends Component {
   }
 
   render() {
-    const { weatherInfoReady, imperial, preciseLocation, hourlyWeather, dailyWeather } = this.state;
+    const { imperial, preciseLocation, hourlyWeather, dailyWeather } = this.state;
     const { city, country, displayName } = this.state.location;
-    const { temp, feelsLike, weatherMain, humidity, icon, sunrise, sunset } = this.state.currentWeather;
+    const { temp, feelsLike, weatherMain, humidity, pressure, visibility, windSpeed, icon, sunrise, sunset } = this.state.currentWeather;
+    const { locationResponseReady, weatherResponseReady, reverseGeocodingResponseReady } = this.state;
 
-    if (weatherInfoReady) {
+    if (locationResponseReady && weatherResponseReady && reverseGeocodingResponseReady) {
       return (
-        <div>
-          <CurrentWeatherWidget
+        <>
+          <ToastContainer />
+          <Background displayName={String(displayName)} icon={icon} />
+          <CurrentWeatherMain
             city={city} country={country} displayName={displayName}
             temp={temp} feelsLike={feelsLike} main={weatherMain}
-            humidity={humidity} icon={icon}
-            sunrise={sunrise} sunset={sunset}
+            icon={icon}
             imperial={imperial}
             locationHandler={() => getLocationFromNavigator(this.updateLocationAndWeather)} preciseLocation={preciseLocation}
           />
           <HourlyWeatherWidget weather={hourlyWeather} imperial={imperial} />
+          <CurrentWeatherExtraWidget
+            humidity={humidity} pressure={pressure} visibility={visibility} windSpeed={windSpeed}
+            sunrise={sunrise} sunset={sunset}
+            imperial={imperial}
+          />
           <DailyWeatherWidget weather={dailyWeather} imperial={imperial} />
-        </div>
+        </>
       );
     } else {
       return (
-        <div>
-          <Segment style={{ width: '100vw', height: '100vh' }}>
-            <Dimmer active inverted>
-              <Loader indeterminate inverted>
-                <h1>Please wait...</h1>
-                <hr/>
-                <h3>Fetching data</h3>
-                <h4>Stuck? Try turning off an ad-blocking software</h4>
-              </Loader>
-            </Dimmer>
-            <Image src='/images/wireframe/short-paragraph.png' />
-          </Segment>
-        </div>
+          <>
+          <ToastContainer />
+          <CustomLoader 
+          locationResponseReady={locationResponseReady}
+          weatherResponseReady={weatherResponseReady}
+          reverseGeocodingResponseReady={reverseGeocodingResponseReady} 
+          />
+          </>
       );
     }
   }
