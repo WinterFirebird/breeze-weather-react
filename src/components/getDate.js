@@ -1,7 +1,7 @@
 import Spacetime from 'spacetime';
 
 /**
- * returns date 'n' days from now
+ * returns formatted date 'n' days from now
  * @param {number} n
  */
 export const dateDaysFromNow = (n) => {
@@ -10,7 +10,7 @@ export const dateDaysFromNow = (n) => {
 };
 
 /**
- * returns hours 'n' hours from now
+ * returns formatted hours 'n' hours from now
  * @param {number} n
  */
 export const hoursHoursFromNow = (n) => {
@@ -19,7 +19,7 @@ export const hoursHoursFromNow = (n) => {
 };
 
 /**
- * converts epoch time to hours and minutes
+ * converts epoch time to formatted hours and minutes
  * @param {number} epochTime
  */
 export const epochTimeToLocalTime = (epochTime) => {

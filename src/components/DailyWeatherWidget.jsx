@@ -11,6 +11,10 @@ const Wrapper = styled.div`
 `;
 
 const DailyWeather = styled.div`
+  padding: 6px;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 6px;
+
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -19,6 +23,9 @@ const DailyWeather = styled.div`
 
 const Element = styled.div`
   border-bottom: 1px solid white;
+  &:last-child {
+    border-bottom: none;
+  }
   display: flex;
   justify-content: space-between;
   > h4 {
@@ -51,14 +58,19 @@ const Element = styled.div`
 
 // eslint-disable-next-line react/prefer-stateless-function
 class DailyWeatherWidget extends Component {
-  render() {
-    const { weather, imperial } = this.props;
-    const jsxArray = weather.map((item, index) => {
+
+  /**
+   * returns a JSX list array of daily weather from the data array passed as props
+   * @param {object} dailyWeatherArray 
+   * @param {boolean} isImperial 
+   */
+  toJSXList = (dailyWeatherArray, isImperial) => {
+    let newDailyWeatherList = dailyWeatherArray.map((item, index) => {
       const date = dateDaysFromNow(index);
       const {weatherMain, humidity, icon} = item;
       const temp = {
-        day: (imperial ? `${convertKelvinTo(item.temp.day, 'f')} °F` : `${convertKelvinTo(item.temp.day, 'c')} °C`),
-        night: (imperial ? `${convertKelvinTo(item.temp.night, 'f')} °F` : `${convertKelvinTo(item.temp.night, 'c')} °C`),
+        day: (isImperial ? `${convertKelvinTo(item.temp.day, 'f')} °F` : `${convertKelvinTo(item.temp.day, 'c')} °C`),
+        night: (isImperial ? `${convertKelvinTo(item.temp.night, 'f')} °F` : `${convertKelvinTo(item.temp.night, 'c')} °C`),
       };
 
       return (
@@ -77,11 +89,17 @@ class DailyWeatherWidget extends Component {
       );
     });
 
+    return newDailyWeatherList;
+  }
+
+  render() {
+    const { weather, imperial } = this.props;
+    const dailyWeatherList = this.toJSXList(weather, imperial);
     return (
       <Wrapper>
         <h2>daily forecast</h2>
         <DailyWeather>
-          {jsxArray || null}
+          {dailyWeatherList || null}
         </DailyWeather>
       </Wrapper>
     );

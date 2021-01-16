@@ -1,8 +1,9 @@
+/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import Weather from './Weather';
 import styled from 'styled-components';
+import Weather from './Weather';
 
-const App = styled.div`
+const MainApp = styled.div`
   color: white;
   padding-top: 1rem;
   min-height: 100vh;
@@ -30,11 +31,11 @@ const App = styled.div`
 class Main extends Component {
   render() {
     return (
-      <App>
+      <MainApp>
         <Weather />
-      </App>
-    )
+      </MainApp>
+    );
   }
 }
 
-export default Main
+export default Main;

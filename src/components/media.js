@@ -7,9 +7,13 @@ import m03n from '../assets/weather/main/03n.png';
 import m04d from '../assets/weather/main/04d.png';
 import m04n from '../assets/weather/main/04n.png';
 import m09d from '../assets/weather/main/09d.png';
+import m09n from '../assets/weather/main/09n.png';
 import m10d from '../assets/weather/main/10d.png';
+import m10n from '../assets/weather/main/10n.png';
 import m11d from '../assets/weather/main/11d.png';
+import m11n from '../assets/weather/main/11n.png';
 import m13d from '../assets/weather/main/13d.png';
+import m13n from '../assets/weather/main/13n.png';
 import m50d from '../assets/weather/main/50d.png'; 
 import m50n from '../assets/weather/main/50n.png';
 
@@ -88,9 +92,13 @@ export const mainIcons = {
   m04d: m04d,
   m04n: m04n,
   m09d: m09d,
+  m09n: m09n,
   m10d: m10d,
+  m10n: m10n,
   m11d: m11d,
+  m11n: m11n,
   m13d: m13d,
+  m13n: m13n,
   m50d: m50d,
   m50n: m50n,
 };
@@ -166,4 +174,4 @@ export const lqBackgrounds = {
   bg13n1_lq,
   bg50d1_lq,
   bg50n1_lq,
-}
+};

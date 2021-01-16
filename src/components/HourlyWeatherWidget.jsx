@@ -15,6 +15,7 @@ const Wrapper = styled.div`
   -ms-overflow-style: none;
   scrollbar-width: none;
   @media screen and (max-width: 768px) {
+    width: 100vw;
     > h2 {
       display: none;
     }
@@ -22,12 +23,30 @@ const Wrapper = styled.div`
 `;
 
 const HourlyWeather = styled.div`
+  padding: 6px;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 6px;
+  
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
   padding-bottom: 12px;
-  display: grid;
-  grid-gap: 14px;
-  grid-template-rows: auto;
-  grid-auto-columns: auto;
-  grid-auto-flow: column;
+  @supports (grid-auto-flow: column) {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-rows: auto;
+    grid-auto-columns: auto;
+    grid-auto-flow: column;
+  };
+
+  @supports not (grid-auto-flow: column) {
+    display: flex;
+    flex-direction: row;
+    > div {
+      margin: 14px;
+    }
+  };
+
   overflow-x: scroll;
   img {
     width: 64px;
@@ -36,11 +55,20 @@ const HourlyWeather = styled.div`
     }
   };
   @media screen and (min-width: 1024px) {
-    grid-auto-flow: row;
+    @supports (grid-auto-flow: row) {
+      grid-auto-flow: row;
+    }
+    @supports not (grid-auto-flow: row) {
+      flex-direction: column;
+    }
+    overflow-x: hidden;
     > div {
       display: flex;
       justify-content: space-between;
       border-bottom: 1px solid white;
+      &:last-child {
+        border-bottom: none;
+      }
       > div {
         display: flex;
         flex-direction: row-reverse;
@@ -60,13 +88,18 @@ const Element = styled.div`
 
 // eslint-disable-next-line react/prefer-stateless-function
 class HourlyWeatherWidget extends Component {
-  render() {
-    const { weather, imperial } = this.props;
-    const jsxArray = weather.map((item, index) => {
+
+  /**
+   * updates the JSX list array of hourly weather from the data array passed as props
+   * @param {object} hourlyWeatherArray 
+   * @param {boolean} isImperial 
+   */
+  toJSXList = (hourlyWeatherArray, isImperial) => {
+    let newHourlyWeatherList = hourlyWeatherArray.map((item, index) => {
       const hour = hoursHoursFromNow(index);
       const mainIconSource = mainIcons[`m${item.icon}`];
       const mainText = item.weatherMain;
-      const temp = imperial ? `${convertKelvinTo(item.temp, 'f')} °F` : `${convertKelvinTo(item.temp, 'c')} °C`;
+      const temp = isImperial ? `${convertKelvinTo(item.temp, 'f')} °F` : `${convertKelvinTo(item.temp, 'c')} °C`;
 
       return (
         <Element key={index}>
@@ -80,11 +113,17 @@ class HourlyWeatherWidget extends Component {
       );
     });
 
+    return newHourlyWeatherList;
+  }
+  
+  render() {
+    const { weather, imperial } = this.props;
+    const hourlyWeatherList = this.toJSXList(weather, imperial);
     return (
       <Wrapper>
         <h2>hourly forecast</h2>
         <HourlyWeather>
-          {jsxArray || null}
+          {hourlyWeatherList || null}
         </HourlyWeather>
       </Wrapper>
     );

@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 /**
  * convert kelvin to celcius or fahrenheit, returns a rounded integer
  * @param {number} temp

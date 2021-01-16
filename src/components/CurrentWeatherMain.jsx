@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Icon } from 'semantic-ui-react';
-import { epochTimeToLocalTime } from './getDate';
 import { convertKelvinTo } from './tempConvert';
-import { mainIcons, extraIcons } from './media';
+import { mainIcons } from './media';
 
 const Wrapper = styled.div`
   grid-area: main;
@@ -11,8 +10,14 @@ const Wrapper = styled.div`
   padding: 40px 40px;
 `;
 
+const Content = styled.div`
+  padding: 12px;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 6px;
+`;
+
 const LocationName = styled.div`
-  font-size: 18px;
+  font-size: 1.3rem;
 `;
 
 const Weather = styled.div`
@@ -33,12 +38,12 @@ const MainIcon = styled.img`
 
 const MainDegrees = styled.div`
   align-self: flex-start;
-  font-size: 62px;
+  font-size: 4.4rem;
 `;
 
 const MainText = styled.div`
   align-self: flex-end;
-  font-size: 34px;
+  font-size: 2.4rem;
   margin-right: 22%;
 `;
 
@@ -48,7 +53,7 @@ const TransparentButton = styled.button`
   border: 1px solid white;
   color: inherit;
   font-family: inherit;
-  font-size: inherit;
+  font-size: 1rem;
   padding: 4px;
 `;
 
@@ -64,40 +69,41 @@ class CurrentWeatherWidget extends Component {
 
     return (
       <Wrapper>
-        {
-          preciseLocation ? (
-            <TransparentButton onClick={locationHandler} disabled style={{ opacity: '0.7' }}>
-              Use precise location 
-              <Icon name='location arrow' />
-            </TransparentButton>
+        <Content>
+          {
+            preciseLocation ? (
+              <TransparentButton onClick={locationHandler} disabled style={{ opacity: '0.7' }}>
+                Use precise location
+                <Icon name="location arrow" />
+              </TransparentButton>
+            ) : (
+              <TransparentButton onClick={locationHandler}>
+                Use precise location
+                <Icon name="location arrow" />
+              </TransparentButton>
+            )
+          }
+          {
+          city ? (
+            <LocationName>
+              <p>{city}, {country}</p>
+            </LocationName>
           ) : (
-            <TransparentButton onClick={locationHandler}>
-              Use precise location 
-              <Icon name="location arrow" />
-            </TransparentButton>
+            <LocationName>
+              <p>{displayName}</p>
+            </LocationName>
           )
-        }
-
-        {
-        city ? (
-          <LocationName>
-            <p>{city}, {country}</p>
-          </LocationName>
-        ) : (
-          <LocationName>
-            <p>{displayName}</p>
-          </LocationName>
-        )
-        }
-        <Weather>
-          <MainIcon src={mainIcons[`m${icon}`]} alt={main} />
-          <MainDegrees>
-            <p>{imperial ? `${convertKelvinTo(temp, 'f')} °F` : `${convertKelvinTo(temp, 'c')} °C`}</p>
-          </MainDegrees>
-          <MainText>
-            <p>{main}</p>
-          </MainText>
-        </Weather>
+          }
+          <Weather>
+            <MainIcon src={mainIcons[`m${icon}`]} alt={main} />
+            <MainDegrees>
+              <p>{imperial ? `${convertKelvinTo(temp, 'f')} °F` : `${convertKelvinTo(temp, 'c')} °C`}</p>
+            </MainDegrees>
+            <MainText>
+              <p>{main}</p>
+            </MainText>
+          </Weather>
+        </Content>
       </Wrapper>
     );
   }

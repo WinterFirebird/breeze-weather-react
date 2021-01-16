@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { backgrounds, lqBackgrounds } from './media';
-import alphaColorBg from '../assets/30_percent_opacity_black.png';
 
 const BackgroundStyled = styled.div`
+  &::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.4);
+    z-index: 3;
+  }
   height: 100%;
   width: 100%;
   position: fixed;
   top: 0;
   left: 0;
   z-index: -1;
-  background-image: url(${alphaColorBg});
-  background-size: cover;
-  background-attachment: fixed;
 
   display: grid;
   grid-template-columns: 100%;
@@ -22,7 +28,7 @@ const BackgroundStyled = styled.div`
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     object-fit: cover;
     filter: blur(40px);
     transform: scale(1.3);
@@ -33,7 +39,7 @@ const BackgroundStyled = styled.div`
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     object-fit: cover;
     z-index: 1;
   }
@@ -52,104 +58,121 @@ class Background extends Component {
     super(props)
   
     this.state = {
-      imagesLoaded: false,
+      newBackgroundsLoaded: false,
     }
+
+    this.backgroundsArray = [
+      [
+        <img src={lqBackgrounds[`bg${this.props.icon}1_lq`]} alt="lq bg" />
+      ],
+    ];
   }
   
+  /**
+   * for a given icon code, caches two backgrounds, and updates the state when the load is finished
+   * @param {string} icon 
+   */
+  cacheBackgrounds = (icon) => {
+    // Two version of image set, one without animation, one with animation.
+    // The one without animation is displayed when the next image is loading, so that the next image will mount with animation. 
+    let newBackgroundSetAnimated = [
+      <img src={lqBackgrounds[`bg${icon}1_lq`]} alt="lq bg" />,
+      <img
+      src={backgrounds[`bg${icon}1`]}
+      className="animate__animated animate__fadeIn" 
+      alt={`background ${icon}`}
+      />,
+      <img
+      src={backgrounds[`bg${icon}2`]} 
+      className="animate__animated animate__fadeInDown"
+      alt={`background ${icon}`}
+    />,
+    ];
+    let newBackgroundSetNotAnimated = [
+      <img src={lqBackgrounds[`bg${icon}1_lq`]} alt="lq bg" />,
+      <img
+      src={backgrounds[`bg${icon}1`]}
+      alt={`background ${icon}`}
+      />,
+      <img
+      src={backgrounds[`bg${icon}2`]}
+      alt={`background ${icon}`}
+      />,
+    ];
 
-  cacheImages = (icon) => {
-    let ico = icon;
-    const retProm = () => {
+    // pushing the created imagesets to the array, to be used in the render method
+    this.backgroundsArray.push(newBackgroundSetAnimated, newBackgroundSetNotAnimated);
+
+    // a promise that resolves when all of the images are loaded
+    let backgroundsLoadPromise = (() => {
       return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          console.log('promise initialized');
-          
-          let i = 1;
-          const imgLoadCallback = () => {
-            console.log('img load')
-            if( i > 1) {
-              resolve('both of the images are loaded');
-            }
-            i++;
+        /* on load of one of the images, checks if the other one is loaded too
+          before resolving the promise */
+        let i = 1;
+        const imgLoadCallback = () => {
+          if( i > 1) {
+            resolve();
           }
+          i++;
+        }
   
-          const img1 = new Image();
-          const img2 = new Image();
+        const img1 = new Image();
+        const img2 = new Image();
   
-          img1.src = backgrounds[`bg${ico}1`];
-          // img1.src = 'https://upload.wikimedia.org/wikipedia/commons/f/ff/Pizigani_1367_Chart_10MB.jpg';
-          img2.src = backgrounds[`bg${ico}2`];
-          // img1.src = 'https://gutta.lv/wp-content/uploads/2015/10/test-img.jpg';
-          // img2.src = 'https://upload.wikimedia.org/wikipedia/commons/f/ff/Pizigani_1367_Chart_10MB.jpg';
-          img1.onload = () => {
-            imgLoadCallback();
-          };
-          img2.onload = () => {
-            imgLoadCallback();
-          };
-          img1.onerror = () => {
-            reject('image 1 loading error');
-          }
-          img2.onerror = () => {
-            reject('image 2 loading error');
-          }
-        } , 100)
-      })
-    }
+        img1.src = backgrounds[`bg${icon}1`];
+        img2.src = backgrounds[`bg${icon}2`];
+        img1.onload = () => {
+          imgLoadCallback();
+        };
+        img2.onload = () => {
+          imgLoadCallback();
+        };
+      });
+    })();
 
-    let promise = retProm(this.props.icon);
-    promise.then(response => {
-      console.log(response)
+    // on promise resolve (when all of the images are loaded)
+    backgroundsLoadPromise.then(response => {
       this.setState({
-        imagesLoaded: true,
-      })
-      // console.log()
+        newBackgroundsLoaded: true,
+      });
     }).catch(err => {
       console.log(err)
-      this.setState({
-        imagesLoaded: false,
-      })
-    })
-    
-    console.log('this.cacheImages() initialized')
+    });
   } 
 
+  // cache the backgrounds when the component mounts
   componentDidMount() {
-    this.cacheImages(this.props.icon)
+    this.cacheBackgrounds(this.props.icon);
   }
 
-  componentDidUpdate() {
-    // if(this.state.imagesLoaded) {
-    //   this.setState(images)
-    // }
+  // cache the new backgrounds on component update, if new images are needed
+  componentDidUpdate(prevProps) {
+    if(this.props.icon != prevProps.icon) {
+      this.setState({
+        newBackgroundsLoaded: false,
+      });
+      this.cacheBackgrounds(this.props.icon);
+    }
   }
 
   render() {
-    const { icon } = this.props;
-    const { imagesLoaded } = this.state;
+    const { newBackgroundsLoaded } = this.state;
+    const bgArray = this.backgroundsArray;
 
-    console.log(`imagesLoaded: ${imagesLoaded}`)
-    if(imagesLoaded) {
+    if(newBackgroundsLoaded) {
       return (
         <BackgroundStyled>
-          <img src={lqBackgrounds[`bg${icon}1_lq`]} alt="lq bg" />
-
-          <img
-          src={backgrounds[`bg${icon}1`]} 
-          // src='https://upload.wikimedia.org/wikipedia/commons/f/ff/Pizigani_1367_Chart_10MB.jpg' 
-          className="animate__animated animate__zoomIn" 
-          />
-
-          <img
-          src={backgrounds[`bg${icon}2`]} 
-          className="animate__animated animate__fadeInDown" 
-          />
+          {/* to display the penultimate item in the array, 
+          which is the animated version of the new background */}
+          {bgArray[`${bgArray.length - 2}`]}
         </BackgroundStyled>
       )
     } else {
       return (
         <BackgroundStyled>
-          <img src={lqBackgrounds[`bg${icon}1_lq`]} alt="lq bg" />
+          {/* to display the non-animated version of the previous background, 
+          so that the animation of the new background triggers */}
+          {bgArray.length >= 3 ? bgArray[`${bgArray.length - 3}`] : bgArray[0]}
         </BackgroundStyled>
       )
     }
