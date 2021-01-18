@@ -45,6 +45,7 @@ const BackgroundStyled = styled.div`
   }
   > img:nth-child(3) {
     position: absolute;
+    top: 0;
     left: 0;
     width: 100%;
     object-fit: contain;
@@ -127,6 +128,9 @@ class Background extends Component {
         img2.onload = () => {
           imgLoadCallback();
         };
+      ///
+      window.localStorage.setItem('lol', 'cheburek')
+      ///
       });
     })();
 

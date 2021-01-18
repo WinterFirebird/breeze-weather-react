@@ -92,10 +92,10 @@ class Weather extends Component {
   updateLocationAndWeather = (latitude, longitude, preciseLocation) => {
     this.setState({
       locationResponseReady: true,
-      preciseLocation,
+      preciseLocation: preciseLocation,
       location: {
-        latitude,
-        longitude,
+        latitude: latitude,
+        longitude: longitude,
       },
     });
 
@@ -119,16 +119,16 @@ class Weather extends Component {
     //  current weather object
     const { temp, feels_like, weather, humidity, pressure, visibility, wind_speed, sunrise, sunset } = response.data.current;
     const currentWeatherObject = {
-      temp,
+      temp: temp,
       feelsLike: feels_like,
       weatherMain: weather[0].main,
-      humidity,
-      pressure,
+      humidity: humidity,
+      pressure: pressure,
       windSpeed: wind_speed,
-      visibility,
+      visibility: visibility,
       icon: weather[0].icon,
-      sunrise,
-      sunset,
+      sunrise: sunrise,
+      sunset: sunset,
     };
 
     //  hourly weather array
