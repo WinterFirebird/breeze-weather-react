@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Icon } from 'semantic-ui-react';
+import { measureSystemContext } from './context';
 import { convertKelvinTo } from './tempConvert';
 import { mainIcons } from './media';
+import MeasureSystemSwitcher from './MeasureSystemSwitcher';
+import PreciseLocationButton from './PreciseLocationButton';
 
 const Wrapper = styled.div`
   grid-area: main;
@@ -21,7 +23,7 @@ const LocationName = styled.div`
 `;
 
 const Weather = styled.div`
-  max-width: 250px;
+  max-width: 300px;
   width: 75%;
   display: inline-flex;
   margin-left: auto;
@@ -38,7 +40,22 @@ const MainIcon = styled.img`
 
 const MainDegrees = styled.div`
   align-self: flex-start;
-  font-size: 4.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  @media screen and (min-width: 720px) {
+    flex-direction: row;
+  }
+  p:first-child {
+    font-size: 4.4rem;
+  }
+  p:last-child {
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-bottom: 1rem;
+    margin-left: 0.5rem;
+  }
 `;
 
 const MainText = styled.div`
@@ -47,57 +64,21 @@ const MainText = styled.div`
   margin-right: 22%;
 `;
 
-const TransparentButton = styled.button`
-  background: none;
-  outline: none;
-  border: 1px solid white;
-  color: inherit;
-  font-family: inherit;
-  font-size: 1rem;
-  padding: 4px;
-`;
-
 // eslint-disable-next-line react/prefer-stateless-function
 class CurrentWeatherWidget extends Component {
+  static contextType = measureSystemContext;
   render() {
     const {
       city, country, displayName,
-      temp, feelsLike, main,
-      icon, imperial,
-      locationHandler, preciseLocation, locationFromLocalStorage,
+      temp, feelsLike, main, icon
     } = this.props;
-
-    const locationButton = (() => {
-      let button = null;
-      if (preciseLocation && locationFromLocalStorage) {
-        button = (
-          <TransparentButton onClick={locationHandler}>
-            Update location
-            <Icon name="location arrow" />
-          </TransparentButton>
-        )
-      } else if (preciseLocation && !locationFromLocalStorage) {
-        button = (
-          <TransparentButton onClick={locationHandler} disabled style={{ opacity: '0.7' }}>
-            Precise location
-            <Icon name="location arrow" />
-          </TransparentButton>
-        )
-      } else if (!preciseLocation && !locationFromLocalStorage) {
-        button = (
-          <TransparentButton onClick={locationHandler}>
-            Precise location
-            <Icon name="location arrow" />
-          </TransparentButton>
-        )
-      }
-      return button;
-    })();
+    const {isImperial} = this.context; 
 
     return (
       <Wrapper>
         <Content>
-          {locationButton}
+          <PreciseLocationButton />
+          <MeasureSystemSwitcher />
           {
           city ? (
             <LocationName>
@@ -112,7 +93,8 @@ class CurrentWeatherWidget extends Component {
           <Weather>
             <MainIcon src={mainIcons[`m${icon}`]} alt={main} />
             <MainDegrees>
-              <p>{imperial ? `${convertKelvinTo(temp, 'f')} °F` : `${convertKelvinTo(temp, 'c')} °C`}</p>
+              <p>{isImperial ? `${convertKelvinTo(temp, 'f')} °F` : `${convertKelvinTo(temp, 'c')} °C`}</p>
+              <p>{isImperial ? `Feels Like ${convertKelvinTo(feelsLike, 'f')} °F` : `Feels Like ${convertKelvinTo(feelsLike, 'c')} °C`}</p>
             </MainDegrees>
             <MainText>
               <p>{main}</p>

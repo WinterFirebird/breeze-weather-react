@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { measureSystemContext } from './context';
 import { hoursHoursFromNow } from './getDate';
 import { convertKelvinTo } from './tempConvert';
 import { mainIcons } from './media';
@@ -88,6 +89,7 @@ const Element = styled.div`
 
 // eslint-disable-next-line react/prefer-stateless-function
 class HourlyWeatherWidget extends Component {
+  static contextType = measureSystemContext;
 
   /**
    * updates the JSX list array of hourly weather from the data array passed as props
@@ -117,8 +119,9 @@ class HourlyWeatherWidget extends Component {
   }
   
   render() {
-    const { weather, imperial } = this.props;
-    const hourlyWeatherList = this.toJSXList(weather, imperial);
+    const { weather } = this.props;
+    const { isImperial } = this.context;
+    const hourlyWeatherList = this.toJSXList(weather, isImperial);
     return (
       <Wrapper>
         <h2>hourly forecast</h2>

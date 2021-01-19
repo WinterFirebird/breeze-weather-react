@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { measureSystemContext } from './context';
 import { dateDaysFromNow } from './getDate';
 import { convertKelvinTo } from './tempConvert';
 import { mainIcons } from './media';
@@ -58,6 +59,7 @@ const Element = styled.div`
 
 // eslint-disable-next-line react/prefer-stateless-function
 class DailyWeatherWidget extends Component {
+  static contextType = measureSystemContext;
 
   /**
    * returns a JSX list array of daily weather from the data array passed as props
@@ -93,8 +95,9 @@ class DailyWeatherWidget extends Component {
   }
 
   render() {
-    const { weather, imperial } = this.props;
-    const dailyWeatherList = this.toJSXList(weather, imperial);
+    const { weather } = this.props;
+    const { isImperial } = this.context;
+    const dailyWeatherList = this.toJSXList(weather, isImperial);
     return (
       <Wrapper>
         <h2>daily forecast</h2>

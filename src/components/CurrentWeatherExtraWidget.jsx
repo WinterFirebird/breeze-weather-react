@@ -1,6 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { measureSystemContext } from './context';
 import { extraIcons } from './media';
 import { epochTimeToLocalTime } from './getDate';
 
@@ -64,9 +65,11 @@ const Element = styled.div`
 `;
 
 class CurrentWeatherExtraWidget extends Component {
+  static contextType = measureSystemContext;
   render() {
     const { humidity, pressure, visibility, windSpeed, 
-      sunrise, sunset, imperial } = this.props;
+      sunrise, sunset, } = this.props;
+    const { isImperial } = this.context;
     const sunriseLocal = epochTimeToLocalTime(sunrise);
     const sunsetLocal = epochTimeToLocalTime(sunset);
 
