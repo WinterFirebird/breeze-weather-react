@@ -64,25 +64,40 @@ class CurrentWeatherWidget extends Component {
       city, country, displayName,
       temp, feelsLike, main,
       icon, imperial,
-      locationHandler, preciseLocation,
+      locationHandler, preciseLocation, locationFromLocalStorage,
     } = this.props;
+
+    const locationButton = (() => {
+      let button = null;
+      if (preciseLocation && locationFromLocalStorage) {
+        button = (
+          <TransparentButton onClick={locationHandler}>
+            Update location
+            <Icon name="location arrow" />
+          </TransparentButton>
+        )
+      } else if (preciseLocation && !locationFromLocalStorage) {
+        button = (
+          <TransparentButton onClick={locationHandler} disabled style={{ opacity: '0.7' }}>
+            Precise location
+            <Icon name="location arrow" />
+          </TransparentButton>
+        )
+      } else if (!preciseLocation && !locationFromLocalStorage) {
+        button = (
+          <TransparentButton onClick={locationHandler}>
+            Precise location
+            <Icon name="location arrow" />
+          </TransparentButton>
+        )
+      }
+      return button;
+    })();
 
     return (
       <Wrapper>
         <Content>
-          {
-            preciseLocation ? (
-              <TransparentButton onClick={locationHandler} disabled style={{ opacity: '0.7' }}>
-                Use precise location
-                <Icon name="location arrow" />
-              </TransparentButton>
-            ) : (
-              <TransparentButton onClick={locationHandler}>
-                Use precise location
-                <Icon name="location arrow" />
-              </TransparentButton>
-            )
-          }
+          {locationButton}
           {
           city ? (
             <LocationName>

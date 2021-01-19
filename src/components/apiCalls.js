@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { toaster } from './Weather';
+
 /**
  * connects to openWeatherMap api and sends back the response to the callback 
  * @param {Function} callback

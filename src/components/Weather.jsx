@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { ToastContainer, toast } from 'react-toastify';
-import { getLocationFromIP, getLocationFromNavigator } from './getLocation';
+import { getLocationFromLocalStorage, getLocationFromIP, getLocationFromNavigator } from './getLocation';
 import { callReverseGeocodingApi, callWeatherApi } from './apiCalls';
 import CustomLoader from './CustomLoader';
 import Background from './Background';
@@ -80,7 +80,7 @@ class Weather extends Component {
   }
 
   componentDidMount() {
-    getLocationFromIP(this.updateLocationAndWeather);
+    getLocationFromLocalStorage(this.updateLocationAndWeather)
   }
 
   /**
@@ -88,16 +88,24 @@ class Weather extends Component {
    * @param {number} latitude 
    * @param {number} longitude 
    * @param {boolean} preciseLocation 
+   * @param {boolean} fromLocalStorage
    */
-  updateLocationAndWeather = (latitude, longitude, preciseLocation) => {
+  updateLocationAndWeather = (latitude, longitude, preciseLocation, fromLocalStorage) => {
     this.setState({
       locationResponseReady: true,
       preciseLocation: preciseLocation,
+      locationFromLocalStorage: fromLocalStorage,
       location: {
         latitude: latitude,
         longitude: longitude,
       },
     });
+
+    // if the geocoordinates are new, store them in the browser local storage
+    if (preciseLocation && !fromLocalStorage) {
+      window.localStorage.setItem('preciseLatitude', latitude);
+      window.localStorage.setItem('preciseLongitude', longitude);
+    }
 
     this.updateWeather();
   }
@@ -192,7 +200,7 @@ class Weather extends Component {
   }
 
   render() {
-    const { imperial, preciseLocation, hourlyWeather, dailyWeather } = this.state;
+    const { imperial, preciseLocation, locationFromLocalStorage, hourlyWeather, dailyWeather } = this.state;
     const { city, country, displayName } = this.state.location;
     const { temp, feelsLike, weatherMain, humidity, pressure, visibility, windSpeed, icon, sunrise, sunset } = this.state.currentWeather;
     const { locationResponseReady, weatherResponseReady, reverseGeocodingResponseReady } = this.state;
@@ -207,7 +215,8 @@ class Weather extends Component {
             temp={temp} feelsLike={feelsLike} main={weatherMain}
             icon={icon}
             imperial={imperial}
-            locationHandler={() => getLocationFromNavigator(this.updateLocationAndWeather)} preciseLocation={preciseLocation}
+            locationHandler={() => getLocationFromNavigator(this.updateLocationAndWeather)} 
+            preciseLocation={preciseLocation} locationFromLocalStorage={locationFromLocalStorage}
           />
           <HourlyWeatherWidget weather={hourlyWeather} imperial={imperial} />
           <CurrentWeatherExtraWidget
@@ -221,12 +230,12 @@ class Weather extends Component {
     } else {
       return (
           <>
-          <ToastContainer />
-          <CustomLoader 
-          locationResponseReady={locationResponseReady}
-          weatherResponseReady={weatherResponseReady}
-          reverseGeocodingResponseReady={reverseGeocodingResponseReady} 
-          />
+            <ToastContainer />
+            <CustomLoader 
+            locationResponseReady={locationResponseReady}
+            weatherResponseReady={weatherResponseReady}
+            reverseGeocodingResponseReady={reverseGeocodingResponseReady} 
+            />
           </>
       );
     }

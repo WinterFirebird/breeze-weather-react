@@ -51,3 +51,18 @@ export const getLocationFromIP = (callback) => {
   };
   makeTheCall();
 };
+
+/**
+ * returns the geocoordinates from the local storage, 
+ * calls ipapi.co api on failure 
+ * @param {Function} callback 
+ */
+export const getLocationFromLocalStorage = (callback) => {
+  const localStorage = window.localStorage;
+  if (localStorage.preciseLatitude && localStorage.preciseLongitude) {
+    const {preciseLatitude, preciseLongitude} = localStorage;
+    setTimeout(() => callback(preciseLatitude, preciseLongitude, true, true), 1);
+  } else {
+    getLocationFromIP(callback);
+  }
+}
