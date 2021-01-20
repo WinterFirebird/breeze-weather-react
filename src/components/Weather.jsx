@@ -6,7 +6,7 @@ import { callReverseGeocodingApi, callWeatherApi } from './apiCalls';
 import { measureSystemContext, locationContext } from './context';
 import CustomLoader from './CustomLoader';
 import Background from './Background';
-import CurrentWeatherMain from './CurrentWeatherMain';
+import CurrentWeatherWidget from './CurrentWeatherWidget';
 import CurrentWeatherExtraWidget from './CurrentWeatherExtraWidget';
 import HourlyWeatherWidget from './HourlyWeatherWidget';
 import DailyWeatherWidget from './DailyWeatherWidget';
@@ -248,7 +248,7 @@ class Weather extends Component {
             }} 
             >
               <Background displayName={displayName} icon={icon} />
-              <CurrentWeatherMain
+              <CurrentWeatherWidget
                 city={city} country={country} displayName={displayName}
                 temp={temp} feelsLike={feelsLike} main={weatherMain}
                 icon={icon}
