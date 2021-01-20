@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { backgrounds, lqBackgrounds } from './media';
 
@@ -181,6 +182,11 @@ class Background extends Component {
       )
     }
   }
+}
+
+Background.propTypes = {
+  icon: PropTypes.string.isRequired,
+  displayName: PropTypes.string,
 }
 
 export default Background;

@@ -1,5 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { measureSystemContext } from './context';
 import { extraIcons } from './media';
@@ -111,5 +112,14 @@ class CurrentWeatherExtraWidget extends Component {
     );
   }
 }
+
+CurrentWeatherExtraWidget.propTypes = {
+  humidity: PropTypes.number,
+  pressure: PropTypes.number,
+  visibility: PropTypes.number,
+  windSpeed: PropTypes.number, 
+  sunrise: PropTypes.number,
+  sunset: PropTypes.number,
+};
 
 export default CurrentWeatherExtraWidget;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { measureSystemContext } from './context';
 import { convertKelvinTo } from './tempConvert';
@@ -105,5 +106,15 @@ class CurrentWeatherWidget extends Component {
     );
   }
 }
+
+CurrentWeatherWidget.propTypes = {
+  city: PropTypes.string,
+  country: PropTypes.string,
+  displayName: PropTypes.string,
+  temp: PropTypes.number,
+  feelsLike: PropTypes.number,
+  main: PropTypes.string,
+  icon: PropTypes.string,
+};
 
 export default CurrentWeatherWidget;

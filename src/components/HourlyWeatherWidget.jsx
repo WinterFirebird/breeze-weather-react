@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { measureSystemContext } from './context';
 import { hoursHoursFromNow } from './getDate';
@@ -132,5 +133,9 @@ class HourlyWeatherWidget extends Component {
     );
   }
 }
+
+HourlyWeatherWidget.propTypes = {
+  weather: PropTypes.array,
+};
 
 export default HourlyWeatherWidget;

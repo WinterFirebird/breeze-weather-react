@@ -1,5 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
 import styled from 'styled-components';
 
@@ -61,6 +62,12 @@ class CustomLoader extends Component {
       </Segment>
     );
   }
+}
+
+CustomLoader.propTypes = {
+  isLocationResponseReady: PropTypes.bool,
+  isWeatherResponseReady: PropTypes.bool,
+  isReverseGeocodingResponseReady: PropTypes.bool,
 }
 
 export default CustomLoader;

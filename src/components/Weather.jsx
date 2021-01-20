@@ -230,6 +230,7 @@ class Weather extends Component {
   }
 
   render() {
+    console.log('weather rerender')
     const { isImperial, isPreciseLocation, isLocationFromLocalStorage, hourlyWeather, dailyWeather } = this.state;
     const { city, country, displayName } = this.state.location;
     const { temp, feelsLike, weatherMain, humidity, pressure, visibility, windSpeed, icon, sunrise, sunset } = this.state.currentWeather;
@@ -246,7 +247,7 @@ class Weather extends Component {
               handler: () => getLocationFromNavigator(this.updateLocationAndWeather),
             }} 
             >
-              <Background displayName={String(displayName)} icon={icon} />
+              <Background displayName={displayName} icon={icon} />
               <CurrentWeatherMain
                 city={city} country={country} displayName={displayName}
                 temp={temp} feelsLike={feelsLike} main={weatherMain}
