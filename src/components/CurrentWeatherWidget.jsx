@@ -70,27 +70,17 @@ class CurrentWeatherWidget extends Component {
   static contextType = measureSystemContext;
   render() {
     const {
-      city, country, displayName,
-      temp, feelsLike, main, icon
+      city, country, temp, feelsLike, main, icon
     } = this.props;
     const {isImperial} = this.context; 
 
     return (
       <Wrapper>
         <Content>
-          <PreciseLocationButton />
           <MeasureSystemSwitcher />
-          {
-          city ? (
-            <LocationName>
-              <p>{city}, {country}</p>
-            </LocationName>
-          ) : (
-            <LocationName>
-              <p>{displayName}</p>
-            </LocationName>
-          )
-          }
+          <LocationName>
+            <p>{city}, {country}</p>
+          </LocationName>
           <Weather>
             <MainIcon src={mainIcons[`m${icon}`]} alt={main} />
             <MainDegrees>
