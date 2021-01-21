@@ -5,38 +5,35 @@ import { locationContext } from './context';
 
 const TransparentButton = styled.button`
   background: none;
+  border: none;
   outline: none;
-  border: 1px solid white;
   color: inherit;
   font-family: inherit;
   font-size: 1rem;
-  padding: 4px;
+  padding: 1rem;
 `;
 
 class PreciseLocationButton extends Component {
   static contextType = locationContext;
   render() {
-    const {isPreciseLocation, isFromLocalStorage, handler} = this.context;
+    const {isPreciseLocation, isFromLocalStorage, locationFromNavigatorClickHandler} = this.context;
     const locationButton = (() => {
       let button = null;
       if (isPreciseLocation && isFromLocalStorage) {
         button = (
-          <TransparentButton onClick={handler}>
-            Update location
+          <TransparentButton onClick={locationFromNavigatorClickHandler}>
             <Icon name="location arrow" />
           </TransparentButton>
         )
       } else if (isPreciseLocation && !isFromLocalStorage) {
         button = (
-          <TransparentButton onClick={handler} disabled style={{ opacity: '0.7' }}>
-            Precise location
+          <TransparentButton onClick={locationFromNavigatorClickHandler} disabled style={{ opacity: '0.5' }}>
             <Icon name="location arrow" />
           </TransparentButton>
         )
       } else if (!isPreciseLocation && !isFromLocalStorage) {
         button = (
-          <TransparentButton onClick={handler}>
-            Precise location
+          <TransparentButton onClick={locationFromNavigatorClickHandler}>
             <Icon name="location arrow" />
           </TransparentButton>
         )

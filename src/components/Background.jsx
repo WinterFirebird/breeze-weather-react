@@ -3,18 +3,20 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { backgrounds, lqBackgrounds } from './media';
 
-const BackgroundStyled = styled.div`
+const BackgroundStyled = styled.div.attrs(props => ({
+  height: props.height ? `${props.height}px` : '100vh',
+}))`
   &::after {
     content: '';
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
+    height: ${props => props.height};
     background-color: rgba(0,0,0,0.4);
     z-index: 3;
   }
-  height: 100%;
+  height: ${props => props.height};
   width: 100%;
   position: fixed;
   top: 0;
@@ -29,7 +31,7 @@ const BackgroundStyled = styled.div`
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
+    height: ${props => props.height};
     object-fit: cover;
     filter: blur(40px);
     transform: scale(1.3);
@@ -40,7 +42,7 @@ const BackgroundStyled = styled.div`
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
+    height: ${props => props.height};
     object-fit: cover;
     z-index: 1;
   }
@@ -61,6 +63,7 @@ class Background extends Component {
   
     this.state = {
       newBackgroundsLoaded: false,
+      innerHeight: null,
     }
 
     this.backgroundsArray = [
@@ -148,6 +151,11 @@ class Background extends Component {
   // cache the backgrounds when the component mounts
   componentDidMount() {
     this.cacheBackgrounds(this.props.icon);
+
+    let innerHeight = window.innerHeight;
+    this.setState({
+      innerHeight: innerHeight,
+    })
   }
 
   // cache the new backgrounds on component update, if new images are needed
@@ -161,12 +169,12 @@ class Background extends Component {
   }
 
   render() {
-    const { newBackgroundsLoaded } = this.state;
+    const { newBackgroundsLoaded, innerHeight } = this.state;
     const bgArray = this.backgroundsArray;
 
     if(newBackgroundsLoaded) {
       return (
-        <BackgroundStyled>
+        <BackgroundStyled height={innerHeight}>
           {/* to display the penultimate item in the array, 
           which is the animated version of the new background */}
           {bgArray[`${bgArray.length - 2}`]}
@@ -174,7 +182,7 @@ class Background extends Component {
       )
     } else {
       return (
-        <BackgroundStyled>
+        <BackgroundStyled height={innerHeight}>
           {/* to display the non-animated version of the previous background, 
           so that the animation of the new background triggers */}
           {bgArray.length >= 3 ? bgArray[`${bgArray.length - 3}`] : bgArray[0]}

@@ -15,9 +15,15 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Montserrat', sans-serif !important;
   }
 
-  @media screen and (max-width: 340px) {
+  @media screen and (max-width: 375px) {
     :root {
       font-size: 12px;
+    };
+  }
+
+  @media screen and (max-width: 340px) {
+    :root {
+      font-size: 10px;
     };
   }
 `;
