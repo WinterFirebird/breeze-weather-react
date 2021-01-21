@@ -11,6 +11,7 @@ const MainApp = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   grid-template-areas:
+  'top-bar'
   'main'
   'hourly'
   'extra'
@@ -18,6 +19,7 @@ const MainApp = styled.div`
   @media screen and (min-width: 1024px) {
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
+    'top-bar null'
     'main extra'
     'hourly daily';
   }

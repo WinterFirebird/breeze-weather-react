@@ -6,10 +6,12 @@ import { callReverseGeocodingApi, callWeatherApi } from './apiCalls';
 import { measureSystemContext, locationContext } from './context';
 import CustomLoader from './CustomLoader';
 import Background from './Background';
-import CurrentWeatherMain from './CurrentWeatherMain';
+import CurrentWeatherWidget from './CurrentWeatherWidget';
 import CurrentWeatherExtraWidget from './CurrentWeatherExtraWidget';
 import HourlyWeatherWidget from './HourlyWeatherWidget';
 import DailyWeatherWidget from './DailyWeatherWidget';
+import CitySearch from './CitySearch';
+import TopBar from './TopBar';
 
 /**
  * triggers a toast notification with the specified title and message
@@ -110,7 +112,9 @@ class Weather extends Component {
       window.localStorage.setItem('preciseLongitude', longitude);
     }
 
-    this.updateWeather();
+    setTimeout(() => {
+      this.updateWeather(false);
+    }, 1);
   }
 
   /**
@@ -185,8 +189,8 @@ class Weather extends Component {
    * processes the response from reverse geocoding api and updates the state with the new location
    * @param {object} response 
    */
-  handleReverseGeocodingResponse = (response) => {
-    const { lat, lon, address, display_name } = response.data;
+  handleReverseGeocodingResponse = (lat, lon, city, country) => {
+    // const { lat, lon, address, display_name } = response.data;
 
     this.setState(
       {
@@ -194,9 +198,9 @@ class Weather extends Component {
         location: {
           latitude: lat,
           longitude: lon,
-          city: (address.city ? address.city : null),
-          country: address.country,
-          displayName: display_name,
+          city: city,
+          country: country,
+          displayName: `${city}, ${country}`,
         },
       },
     );
@@ -230,9 +234,8 @@ class Weather extends Component {
   }
 
   render() {
-    console.log('weather rerender')
     const { isImperial, isPreciseLocation, isLocationFromLocalStorage, hourlyWeather, dailyWeather } = this.state;
-    const { city, country, displayName } = this.state.location;
+    const { city, country } = this.state.location;
     const { temp, feelsLike, weatherMain, humidity, pressure, visibility, windSpeed, icon, sunrise, sunset } = this.state.currentWeather;
     const { isLocationResponseReady, isWeatherResponseReady, isReverseGeocodingResponseReady } = this.state;
 
@@ -244,12 +247,15 @@ class Weather extends Component {
             <locationContext.Provider 
             value={{isPreciseLocation: isPreciseLocation, 
               isFromLocalStorage: isLocationFromLocalStorage,
-              handler: () => getLocationFromNavigator(this.updateLocationAndWeather),
+              locationFromNavigatorClickHandler: () => getLocationFromNavigator(this.updateLocationAndWeather),
+              onSearchLocationChange: this.updateLocationAndWeather,
             }} 
             >
-              <Background displayName={displayName} icon={icon} />
-              <CurrentWeatherMain
-                city={city} country={country} displayName={displayName}
+              <Background icon={icon} />
+              {/* <CitySearch locationChangeCallback={this.updateLocationAndWeather} /> */}
+              <TopBar />
+              <CurrentWeatherWidget
+                city={city} country={country}
                 temp={temp} feelsLike={feelsLike} main={weatherMain}
                 icon={icon}
               />
