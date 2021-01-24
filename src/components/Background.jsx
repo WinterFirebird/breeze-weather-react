@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { backgrounds, lqBackgrounds } from './media';
 
 const BackgroundStyled = styled.div.attrs(props => ({
@@ -12,26 +12,24 @@ const BackgroundStyled = styled.div.attrs(props => ({
     top: 0;
     left: 0;
     width: 100%;
-    height: ${props => props.height};
+    height: 100vh;
     background-color: rgba(0,0,0,0.4);
     z-index: 3;
   }
-  height: ${props => props.height};
+  min-height: ${props => props.height};
+  height: 100vh;
   width: 100%;
   position: fixed;
   top: 0;
   left: 0;
   z-index: -1;
 
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 100%;
   > img:nth-child(1) {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: ${props => props.height};
+    height: 100%;
     object-fit: cover;
     filter: blur(40px);
     transform: scale(1.3);
@@ -42,7 +40,7 @@ const BackgroundStyled = styled.div.attrs(props => ({
     top: 0;
     left: 0;
     width: 100%;
-    height: ${props => props.height};
+    height: 100%;
     object-fit: cover;
     z-index: 1;
   }
@@ -63,7 +61,7 @@ class Background extends Component {
   
     this.state = {
       newBackgroundsLoaded: false,
-      innerHeight: null,
+      viewportHeight: null,
     }
 
     this.backgroundsArray = [
@@ -78,10 +76,8 @@ class Background extends Component {
    * @param {string} icon 
    */
   cacheBackgrounds = (icon) => {
-    // Two version of image set, one without animation, one with animation.
-    // The one without animation is displayed when the next image is loading, so that the next image will mount with animation. 
+    // the full version of the new background, to be mounted when the image load finishes
     let newBackgroundSetAnimated = [
-      <img src={lqBackgrounds[`bg${icon}1_lq`]} alt="lq bg" />,
       <img
       src={backgrounds[`bg${icon}1`]}
       className="animate__animated animate__fadeIn" 
@@ -93,20 +89,9 @@ class Background extends Component {
       alt={`background ${icon}`}
     />,
     ];
-    let newBackgroundSetNotAnimated = [
-      <img src={lqBackgrounds[`bg${icon}1_lq`]} alt="lq bg" />,
-      <img
-      src={backgrounds[`bg${icon}1`]}
-      alt={`background ${icon}`}
-      />,
-      <img
-      src={backgrounds[`bg${icon}2`]}
-      alt={`background ${icon}`}
-      />,
-    ];
 
     // pushing the created imagesets to the array, to be used in the render method
-    this.backgroundsArray.push(newBackgroundSetAnimated, newBackgroundSetNotAnimated);
+    this.backgroundsArray.push(newBackgroundSetAnimated);
 
     // a promise that resolves when all of the images are loaded
     let backgroundsLoadPromise = (() => {
@@ -132,9 +117,6 @@ class Background extends Component {
         img2.onload = () => {
           imgLoadCallback();
         };
-      ///
-      window.localStorage.setItem('lol', 'cheburek')
-      ///
       });
     })();
 
@@ -144,7 +126,7 @@ class Background extends Component {
         newBackgroundsLoaded: true,
       });
     }).catch(err => {
-      console.log(err)
+      console.log(err);
     });
   } 
 
@@ -152,9 +134,10 @@ class Background extends Component {
   componentDidMount() {
     this.cacheBackgrounds(this.props.icon);
 
-    let innerHeight = window.innerHeight;
+    let rootElement = document.querySelector("html");
+    let viewportHeight = rootElement.getBoundingClientRect().height;
     this.setState({
-      innerHeight: innerHeight,
+      viewportHeight: viewportHeight,
     })
   }
 
@@ -169,26 +152,19 @@ class Background extends Component {
   }
 
   render() {
-    const { newBackgroundsLoaded, innerHeight } = this.state;
+    console.log('background rerender');
+    const { newBackgroundsLoaded, viewportHeight } = this.state;
     const bgArray = this.backgroundsArray;
-
-    if(newBackgroundsLoaded) {
-      return (
-        <BackgroundStyled height={innerHeight}>
-          {/* to display the penultimate item in the array, 
-          which is the animated version of the new background */}
-          {bgArray[`${bgArray.length - 2}`]}
-        </BackgroundStyled>
-      )
-    } else {
-      return (
-        <BackgroundStyled height={innerHeight}>
-          {/* to display the non-animated version of the previous background, 
-          so that the animation of the new background triggers */}
-          {bgArray.length >= 3 ? bgArray[`${bgArray.length - 3}`] : bgArray[0]}
-        </BackgroundStyled>
-      )
-    }
+    const { icon } = this.props;
+    return (
+      <BackgroundStyled height={viewportHeight}>
+        {/* to display only the lq image of the new background, until the full version is loaded */}
+        <img src={lqBackgrounds[`bg${icon}1_lq`]}></img>
+        {/* to display the last item in the array, 
+        which is the full version of the new background */}
+        {newBackgroundsLoaded ? bgArray[`${bgArray.length - 1}`] : null}
+      </BackgroundStyled>
+    )
   }
 }
 
@@ -197,4 +173,4 @@ Background.propTypes = {
   displayName: PropTypes.string,
 }
 
-export default Background;
+export default React.memo(Background);

@@ -57,4 +57,4 @@ class MeasureSystemSwitcher extends Component {
   }
 }
 
-export default MeasureSystemSwitcher
+export default MeasureSystemSwitcher;
