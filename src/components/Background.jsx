@@ -93,41 +93,27 @@ class Background extends Component {
     // pushing the created imagesets to the array, to be used in the render method
     this.backgroundsArray.push(newBackgroundSetAnimated);
 
-    // a promise that resolves when all of the images are loaded
-    let backgroundsLoadPromise = (() => {
-      return new Promise((resolve, reject) => {
-        /* on load of one of the images, checks if the other one is loaded too
-          before resolving the promise */
-        let i = 1;
-        const imgLoadCallback = () => {
-          if( i > 1) {
-            resolve();
-          }
-          i++;
-        }
-  
-        const img1 = new Image();
-        const img2 = new Image();
-  
-        img1.src = backgrounds[`bg${icon}1`];
-        img2.src = backgrounds[`bg${icon}2`];
-        img1.onload = () => {
-          imgLoadCallback();
-        };
-        img2.onload = () => {
-          imgLoadCallback();
-        };
-      });
-    })();
+    // promises that resolve on load of an image
+    const firstImagePromise = new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = backgrounds[`bg${icon}1`];
+      image.onload = resolve();
+    });
 
-    // on promise resolve (when all of the images are loaded)
-    backgroundsLoadPromise.then(response => {
+    const secondImagePromise = new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = backgrounds[`bg${icon}2`];
+      image.onload = resolve();
+    });
+
+    // fires up when both of the promises are resolved, which means both of the images are loaded
+    Promise.all([firstImagePromise, secondImagePromise]).then(values => {
       this.setState({
         newBackgroundsLoaded: true,
       });
     }).catch(err => {
       console.log(err);
-    });
+    })
   } 
 
   // cache the backgrounds when the component mounts
@@ -152,7 +138,6 @@ class Background extends Component {
   }
 
   render() {
-    console.log('background rerender');
     const { newBackgroundsLoaded, viewportHeight } = this.state;
     const bgArray = this.backgroundsArray;
     const { icon } = this.props;

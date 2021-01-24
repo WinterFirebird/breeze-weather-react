@@ -116,8 +116,11 @@ class CitySearch extends Component {
    * @param {object} event 
    */
   searchOptionClickHandler = (event) => {
-    const searchResultIndex = event.target.attributes.nth.value;
-    if (searchResultIndex) {
+    let searchResultIndex;
+    if (event.target.attributes.nth) {
+      searchResultIndex = event.target.attributes.nth.value;
+    }
+    if (searchResultIndex || searchResultIndex == 0) {
       this.setState(prevState => {
         return {
           chosenResult: prevState.searchResults[searchResultIndex],
