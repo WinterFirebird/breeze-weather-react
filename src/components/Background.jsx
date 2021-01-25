@@ -19,7 +19,8 @@ const BackgroundStyled = styled.div.attrs(props => ({
     background-color: rgba(0,0,0,0.4);
     z-index: 3;
   }
-  height: ${props => props.height};
+  min-height: ${props => props.height};
+  height: 100vh;
   width: 100%;
   position: fixed;
   top: 0;
@@ -34,7 +35,7 @@ const BackgroundStyled = styled.div.attrs(props => ({
     top: 0;
     left: 0;
     width: 100%;
-    height: ${props => props.height};
+    height: 100%;
     object-fit: cover;
     filter: blur(40px);
     transform: scale(1.3);
@@ -45,7 +46,7 @@ const BackgroundStyled = styled.div.attrs(props => ({
     top: 0;
     left: 0;
     width: 100%;
-    height: ${props => props.height};
+    height: 100%;
     object-fit: cover;
     z-index: 1;
   }
@@ -62,12 +63,12 @@ const BackgroundStyled = styled.div.attrs(props => ({
 
 class Background extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   
     this.state = {
       newBackgroundsLoaded: false,
       innerHeight: null,
-    }
+    };
 
     this.backgroundsArray = [
       [
@@ -116,7 +117,7 @@ class Background extends Component {
         newBackgroundsLoaded: true,
       });
     }).catch(err => {
-      console.log(err)
+      console.log(err);
     });
   } 
 
@@ -124,10 +125,11 @@ class Background extends Component {
   componentDidMount() {
     this.cacheBackgrounds(this.props.icon);
 
-    let innerHeight = window.innerHeight;
+    // for changing the min-height of the document 
+    const innerHeight = document.querySelector('html').getBoundingClientRect().height;
     this.setState({
       innerHeight: innerHeight,
-    })
+    });
   }
 
   // cache the new backgrounds on component update, if new images are needed
