@@ -4,7 +4,6 @@ import { Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { locationContext } from './context';
 import { callDirectGeocodingApi } from './apiCalls';
-import { toast } from 'react-toastify';
 
 const Wrapper = styled.div`
   font-size: 1.5rem;
@@ -14,6 +13,7 @@ const Wrapper = styled.div`
   > ul {
     border: 1px solid #fff;
     background-color: rgba(0,0,0,0.7);
+    padding: 1px;
     line-height: 4rem;
     list-style-type: none;
     display: flex,
@@ -49,7 +49,7 @@ const SearchWrapper = styled.div`
 `;
 
 class CitySearch extends Component {
-  static contextType = locationContext;
+  static contextType = locationContext
 
   constructor(props) {
     super(props);
@@ -65,7 +65,6 @@ class CitySearch extends Component {
           lon: null,
         }
       ],
-      chosenResult: null,
     };
     this.inputElement = React.createRef();
   }
@@ -79,15 +78,6 @@ class CitySearch extends Component {
       currentState.readySearchValue != prevState.readySearchValue 
       && currentState.searchMode) {
       callDirectGeocodingApi(this.searchResponseHandler, currentState.readySearchValue);
-    }
-    
-    // if the user has chosen a location, update the weather
-    if (currentState.chosenResult != prevState.chosenResult) {
-      const { lat, lon, city, country } = this.state.chosenResult;
-      this.context.onSearchLocationChange(lat, lon, true, false);
-      this.setState({
-        searchMode: false,
-      })
     }
   }
 
@@ -116,16 +106,10 @@ class CitySearch extends Component {
    * @param {object} event 
    */
   searchOptionClickHandler = (event) => {
-    let searchResultIndex;
-    if (event.target.attributes.nth) {
-      searchResultIndex = event.target.attributes.nth.value;
-    }
-    if (searchResultIndex || searchResultIndex == 0) {
-      this.setState(prevState => {
-        return {
-          chosenResult: prevState.searchResults[searchResultIndex],
-        };
-      });
+    if(event.target.attributes.nth) {
+      let index = event.target.attributes.nth.value;
+      const { lat, lon, city, country } = this.state.searchResults[index];
+      this.context.onSearchLocationChange(lat, lon, true, false, city, country);
     }
   }
 
@@ -150,8 +134,7 @@ class CitySearch extends Component {
   }
 
   /**
-   * handles the change of search input
-   * updates the value of the search query if the user hasn't been typing for 2s
+   * handles the change of search input 
    */
   inputChangeHandler = () => {
     let val = this.inputElement.current.value;
@@ -172,7 +155,7 @@ class CitySearch extends Component {
   }
 
   /**
-   * enables search mode
+   * disables search mode
    */
   inputFocusHandler = () => {
     this.setState({
@@ -181,14 +164,14 @@ class CitySearch extends Component {
   }
 
   /**
-   * waits 500ms and disables searchMode if the search input loses focus
+   * waits 100ms and disables searchMode, has to wait so that the list closes after click on a result
    */
   inputBlurHandler = () => {
     setTimeout(() => {
       this.setState({
         searchMode: false,
       });
-    }, 500);
+    }, 100);
   }
   
   render() {
@@ -211,7 +194,7 @@ class CitySearch extends Component {
         </SearchWrapper>
         {searchMode? resultsJSXList : null}
       </Wrapper>
-    )
+    );
   }
 }
 

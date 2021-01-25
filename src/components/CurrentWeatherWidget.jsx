@@ -5,7 +5,6 @@ import { measureSystemContext } from './context';
 import { convertKelvinTo } from './tempConvert';
 import { mainIcons } from './media';
 import MeasureSystemSwitcher from './MeasureSystemSwitcher';
-import PreciseLocationButton from './PreciseLocationButton';
 
 const Wrapper = styled.div`
   grid-area: main;

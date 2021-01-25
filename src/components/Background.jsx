@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 import { backgrounds, lqBackgrounds } from './media';
 
 const BackgroundStyled = styled.div.attrs(props => ({
+  /* sets the minimum height equal to the viewport height in pixels, calculated on document load,
+  so that the background will not shrink on keyboard opening on mobile browsers
+  */
   height: props.height ? `${props.height}px` : '100vh',
 }))`
   &::after {
@@ -12,7 +15,7 @@ const BackgroundStyled = styled.div.attrs(props => ({
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
+    height: ${props => props.height};
     background-color: rgba(0,0,0,0.4);
     z-index: 3;
   }
@@ -24,6 +27,9 @@ const BackgroundStyled = styled.div.attrs(props => ({
   left: 0;
   z-index: -1;
 
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
   > img:nth-child(1) {
     position: absolute;
     top: 0;
@@ -57,12 +63,12 @@ const BackgroundStyled = styled.div.attrs(props => ({
 
 class Background extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   
     this.state = {
       newBackgroundsLoaded: false,
-      viewportHeight: null,
-    }
+      innerHeight: null,
+    };
 
     this.backgroundsArray = [
       [
@@ -93,38 +99,37 @@ class Background extends Component {
     // pushing the created imagesets to the array, to be used in the render method
     this.backgroundsArray.push(newBackgroundSetAnimated);
 
-    // promises that resolve on load of an image
-    const firstImagePromise = new Promise((resolve, reject) => {
+    // promises that resolve on image load
+    const image1Promise = new Promise((resolve, reject) => {
       const image = new Image();
       image.src = backgrounds[`bg${icon}1`];
-      image.onload = resolve();
+      image.onload = resolve;
     });
-
-    const secondImagePromise = new Promise((resolve, reject) => {
+    const image2Promise = new Promise((resolve, reject) => {
       const image = new Image();
       image.src = backgrounds[`bg${icon}2`];
-      image.onload = resolve();
+      image.onload = resolve;
     });
 
-    // fires up when both of the promises are resolved, which means both of the images are loaded
-    Promise.all([firstImagePromise, secondImagePromise]).then(values => {
+    // when both of the promises resolve inform the component that it can now mount the images
+    Promise.all([image1Promise, image2Promise]).then(results => {
       this.setState({
         newBackgroundsLoaded: true,
       });
     }).catch(err => {
       console.log(err);
-    })
+    });
   } 
 
   // cache the backgrounds when the component mounts
   componentDidMount() {
     this.cacheBackgrounds(this.props.icon);
 
-    let rootElement = document.querySelector("html");
-    let viewportHeight = rootElement.getBoundingClientRect().height;
+    // for changing the min-height of the document 
+    const innerHeight = document.querySelector('html').getBoundingClientRect().height;
     this.setState({
-      viewportHeight: viewportHeight,
-    })
+      innerHeight: innerHeight,
+    });
   }
 
   // cache the new backgrounds on component update, if new images are needed
@@ -138,24 +143,24 @@ class Background extends Component {
   }
 
   render() {
-    const { newBackgroundsLoaded, viewportHeight } = this.state;
+    const { newBackgroundsLoaded, innerHeight } = this.state;
     const bgArray = this.backgroundsArray;
     const { icon } = this.props;
     return (
-      <BackgroundStyled height={viewportHeight}>
+      <BackgroundStyled height={innerHeight}>
         {/* to display only the lq image of the new background, until the full version is loaded */}
-        <img src={lqBackgrounds[`bg${icon}1_lq`]}></img>
+        <img src={lqBackgrounds[`bg${icon}1_lq`]} alt={`${icon} bg`} />
         {/* to display the last item in the array, 
         which is the full version of the new background */}
         {newBackgroundsLoaded ? bgArray[`${bgArray.length - 1}`] : null}
       </BackgroundStyled>
-    )
+    );
   }
 }
 
 Background.propTypes = {
   icon: PropTypes.string.isRequired,
   displayName: PropTypes.string,
-}
+};
 
-export default React.memo(Background);
+export default Background;

@@ -58,10 +58,9 @@ export const getLocationFromIP = (callback) => {
  * @param {Function} callback 
  */
 export const getLocationFromLocalStorage = (callback) => {
-  const localStorage = window.localStorage;
-  if (localStorage.preciseLatitude && localStorage.preciseLongitude) {
-    const {preciseLatitude, preciseLongitude} = localStorage;
-    setTimeout(() => callback(preciseLatitude, preciseLongitude, true, true), 1);
+  const { preciseLatitude, preciseLongitude, preciseCity, preciseCountry } = window.localStorage;
+  if (preciseLatitude && preciseLongitude) {
+    setTimeout(() => callback(preciseLatitude, preciseLongitude, true, true, preciseCity, preciseCountry), 1);
   } else {
     getLocationFromIP(callback);
   }
