@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import { ToastContainer, toast } from 'react-toastify';
 import { getLocationFromLocalStorage, getLocationFromIP, getLocationFromNavigator } from './getLocation';
 import { callReverseGeocodingApi, callWeatherApi } from './apiCalls';
@@ -10,7 +9,6 @@ import CurrentWeatherWidget from './CurrentWeatherWidget';
 import CurrentWeatherExtraWidget from './CurrentWeatherExtraWidget';
 import HourlyWeatherWidget from './HourlyWeatherWidget';
 import DailyWeatherWidget from './DailyWeatherWidget';
-import CitySearch from './CitySearch';
 import TopBar from './TopBar';
 
 /**
@@ -48,7 +46,7 @@ class Weather extends Component {
         city: null,
         country: null,
         displayName: null,
-        id: null,
+        //id: null,
       },
       currentWeather: {
         temp: null,
@@ -84,7 +82,7 @@ class Weather extends Component {
   }
 
   componentDidMount() {
-    getLocationFromLocalStorage(this.updateLocationAndWeather);
+    getLocationFromLocalStorage(this.updateLocationAndTriggerWeatherUpdate);
     this.handleMeasureSystemChange(null, false);
   }
 
@@ -95,7 +93,7 @@ class Weather extends Component {
    * @param {boolean} isPreciseLocation 
    * @param {boolean} isFromLocalStorage
    */
-  updateLocationAndWeather = (latitude, longitude, isPreciseLocation, isFromLocalStorage) => {
+  updateLocationAndTriggerWeatherUpdate = (latitude, longitude, isPreciseLocation, isFromLocalStorage, city, country) => {
     this.setState({
       isLocationResponseReady: true,
       isPreciseLocation: isPreciseLocation,
@@ -103,27 +101,44 @@ class Weather extends Component {
       location: {
         latitude: latitude,
         longitude: longitude,
+        city: city ? city : null,
+        country: country ? country : null,
+        displayName: `${city}, ${country}`,
       },
     });
+    if (city && country) {
+      this.setState({
+        isReverseGeocodingResponseReady: true,
+      });
+    }
 
-    // if the geocoordinates are new, store them in the browser local storage
+    // if the geocoordinates are new and they are not from IP geocoding, store them in the browser local storage
     if (isPreciseLocation && !isFromLocalStorage) {
       window.localStorage.setItem('preciseLatitude', latitude);
       window.localStorage.setItem('preciseLongitude', longitude);
+      if (city) {
+        window.localStorage.setItem('preciseCity', city);
+      }
+      if (country) {
+        window.localStorage.setItem('preciseCountry', country);
+      }
     }
 
     setTimeout(() => {
-      this.updateWeather(false);
+      this.updateWeatherAndLocationName(false);
     }, 1);
   }
 
   /**
-   * updates the weather and place names with the present geocoordinates in the component state
+   * updates the weather and place names (if needed) with the present geocoordinates in the component state
    */
-  updateWeather = () => {
-    const { latitude, longitude } = this.state.location;
+  updateWeatherAndLocationName = () => {
+    const { latitude, longitude, city, country } = this.state.location;
     callWeatherApi(this.handleWeatherResponse, latitude, longitude);
-    callReverseGeocodingApi(this.handleReverseGeocodingResponse, latitude, longitude);
+    // call the reverse geocoding api only if no data is already provided 
+    if(!city || !country) {
+      callReverseGeocodingApi(this.handleReverseGeocodingResponse, latitude, longitude);
+    }
   }
 
   /**
@@ -190,8 +205,6 @@ class Weather extends Component {
    * @param {object} response 
    */
   handleReverseGeocodingResponse = (lat, lon, city, country) => {
-    // const { lat, lon, address, display_name } = response.data;
-
     this.setState(
       {
         isReverseGeocodingResponseReady: true,
@@ -204,6 +217,8 @@ class Weather extends Component {
         },
       },
     );
+    window.localStorage.setItem('preciseCity', city);
+    window.localStorage.setItem('preciseCountry', country);
   }
 
   /**
@@ -247,8 +262,8 @@ class Weather extends Component {
             <locationContext.Provider 
             value={{isPreciseLocation: isPreciseLocation, 
               isFromLocalStorage: isLocationFromLocalStorage,
-              locationFromNavigatorClickHandler: () => getLocationFromNavigator(this.updateLocationAndWeather),
-              onSearchLocationChange: this.updateLocationAndWeather,
+              locationFromNavigatorClickHandler: () => getLocationFromNavigator(this.updateLocationAndTriggerWeatherUpdate),
+              onSearchLocationChange: this.updateLocationAndTriggerWeatherUpdate,
             }} 
             >
               <Background icon={icon} />
