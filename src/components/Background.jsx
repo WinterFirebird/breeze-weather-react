@@ -15,7 +15,7 @@ const BackgroundStyled = styled.div.attrs(props => ({
     top: 0;
     left: 0;
     width: 100%;
-    height: ${props => props.height};
+    height: 100vh;
     background-color: rgba(0,0,0,0.4);
     z-index: 3;
   }

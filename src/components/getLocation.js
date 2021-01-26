@@ -8,7 +8,7 @@ import { toaster } from './Weather';
 export const getLocationFromNavigator = (callback) => {
   const navigatorResponseHandler = (responseFromNavigator) => {
     const { latitude, longitude } = responseFromNavigator.coords;
-    callback(latitude, longitude, true);
+    callback(latitude, longitude, true, false, true);
   };
   window.navigator.geolocation.getCurrentPosition(navigatorResponseHandler);
 };
@@ -30,7 +30,7 @@ export const getLocationFromIP = (callback) => {
         try {
           const { latitude, longitude } = parsedJSON.data;
           if (latitude && longitude) {
-            callback(latitude, longitude, false);
+            callback(latitude, longitude, false, false, false);
           } else {
             throw 'Error: cannot derive location from IP address...';
           }
@@ -53,14 +53,15 @@ export const getLocationFromIP = (callback) => {
 };
 
 /**
- * returns the geocoordinates from the local storage, 
+ * returns the location data from the local storage, 
  * calls ipapi.co api on failure 
  * @param {Function} callback 
  */
 export const getLocationFromLocalStorage = (callback) => {
   const { preciseLatitude, preciseLongitude, preciseCity, preciseCountry } = window.localStorage;
+  const isLocationFromGPS = window.localStorage.isLocationFromGPS == 'true' ? true : false;
   if (preciseLatitude && preciseLongitude) {
-    setTimeout(() => callback(preciseLatitude, preciseLongitude, true, true, preciseCity, preciseCountry), 1);
+    setTimeout(() => callback(preciseLatitude, preciseLongitude, true, true, isLocationFromGPS, preciseCity, preciseCountry), 1);
   } else {
     getLocationFromIP(callback);
   }

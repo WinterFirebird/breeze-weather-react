@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { toaster } from './Weather';
+import { countryNameToCode } from './countryNames'
 
 /**
  * connects to openWeatherMap api and sends back the response to the callback 
@@ -39,7 +40,7 @@ export const callWeatherApi = (callback, latitude, longitude) => {
 export const callReverseGeocodingApi = (callback, latitude, longitude) => {
   let callCount = 0;
   const makeTheCall = () => {
-    axios.get(`https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=5&appid=62aeb57d7356a18463b4c79abdcdab58`)
+    axios.get(`https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&appid=62aeb57d7356a18463b4c79abdcdab58`)
       .then(response => {
         let parsedJSON;
         if (typeof response === 'object') parsedJSON = response;
@@ -63,20 +64,30 @@ export const callReverseGeocodingApi = (callback, latitude, longitude) => {
 
 /**
  * searches for locations given a string and send back the response to the callback
+ * makes the query more precise, if gets a comma separeted city and country as an argument 
  * @param {Function} callback 
- * @param {string} name 
+ * @param {string} query 
  */
-export const callDirectGeocodingApi  = (callback, name) => {
+export const callDirectGeocodingApi  = (callback, query) => {
   let callCount = 0;
+  let apiQuery = (() => {
+    if (query.includes(',')) {
+      const [ cityName, countryName ] = query.split(',');
+      console.log(cityName, countryName);
+      let countryCode = countryNameToCode(countryName);
+      return cityName + ',' + countryCode;
+    } else return query;
+  })();
   const makeTheCall = () => {
-    axios.get(`https://api.openweathermap.org/geo/1.0/direct?q=${name}&limit=4&appid=62aeb57d7356a18463b4c79abdcdab58`)
+    axios.get(`https://api.openweathermap.org/geo/1.0/direct?q=${apiQuery}&limit=5&appid=62aeb57d7356a18463b4c79abdcdab58`)
       .then(response => {
         let parsedJSON;
         if (typeof response === 'object') parsedJSON = response;
         if (typeof response === 'string') parsedJSON = JSON.parse(response);
         callback(parsedJSON);
       })
-      .catch(error => {
+      .catch(err => {
+        console.log(err);
       });
   };
   makeTheCall();
