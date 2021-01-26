@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import CitySearch from './CitySearch';
-import PreciseLocationButton from './PreciseLocationButton';
+import GPSButton from './GPSButton';
 
 const TopBarWrapper = styled.div`
   grid-area: top-bar;
@@ -40,7 +40,7 @@ class TopBar extends Component {
       <TopBarWrapper>
         <LocationWrapper>
           <CitySearch />
-          <PreciseLocationButton />
+          <GPSButton />
         </LocationWrapper>
       </TopBarWrapper>
     );

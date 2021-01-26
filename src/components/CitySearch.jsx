@@ -4,22 +4,31 @@ import { Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { locationContext } from './context';
 import { callDirectGeocodingApi } from './apiCalls';
+import { countryCodeToName } from './countryNames';
 
 const Wrapper = styled.div`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  border-right: 1px solid #fff;
+  position: relative;
   display: grid;
   grid-template-columns: 1fr;
   z-index: 999;
   > ul {
     border: 1px solid #fff;
-    background-color: rgba(0,0,0,0.7);
-    padding: 1px;
+    border-top: none;
+    background-color: rgba(0,0,0,0.8);
+    padding: 4px 8px;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
     line-height: 4rem;
     list-style-type: none;
-    display: flex,
+    display: flex;
     flex-direction: column;
     li {
       cursor: pointer;
+      border-bottom: 1px solid rgba(256,256,256,0.3); 
     }
   }
 `;
@@ -33,7 +42,6 @@ const SearchWrapper = styled.div`
     background-color: rgba(0,0,0,0.3);
     border: none;
     border-left: 1px solid #fff;
-    border-right: 1px solid #fff;
     color: #fff;
     padding: 0.2rem 0.6rem;
     height: 100%;
@@ -92,7 +100,7 @@ class CitySearch extends Component {
       JSXList = <ul>{array.map((element, index) => {
         return <li key={index} onClick={(event) => this.searchOptionClickHandler(event)} nth={index}>
           <Icon name="building outline" />
-          {element.city}, {element.country} 
+          {element.city}, {countryCodeToName(element.country)} 
           </li>
       })}</ul>;
     } else {
@@ -109,7 +117,7 @@ class CitySearch extends Component {
     if(event.target.attributes.nth) {
       let index = event.target.attributes.nth.value;
       const { lat, lon, city, country } = this.state.searchResults[index];
-      this.context.onSearchLocationChange(lat, lon, true, false, city, country);
+      this.context.onSearchLocationChange(lat, lon, true, false, false, city, country);
     }
   }
 

@@ -3,12 +3,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import { getLocationFromLocalStorage, getLocationFromIP, getLocationFromNavigator } from './getLocation';
 import { callReverseGeocodingApi, callWeatherApi } from './apiCalls';
 import { measureSystemContext, locationContext } from './context';
-import CustomLoader from './CustomLoader';
+import ProgressiveLoading from './ProgressiveLoading';
 import Background from './Background';
-import CurrentWeatherWidget from './CurrentWeatherWidget';
-import CurrentWeatherExtraWidget from './CurrentWeatherExtraWidget';
-import HourlyWeatherWidget from './HourlyWeatherWidget';
-import DailyWeatherWidget from './DailyWeatherWidget';
+import CurrentForecast from './CurrentForecast';
+import CurrentForecastExtra from './CurrentForecastExtra';
+import HourlyForecast from './HourlyForecast';
+import DailyForecast from './DailyForecast';
 import TopBar from './TopBar';
 
 /**
@@ -39,6 +39,7 @@ class Weather extends Component {
       isReverseGeocodingResponseReady: false,
       isPreciseLocation: false,
       isLocationFromLocalStorage: null,
+      isLocationFromGPS: null,
       isImperial: false,
       location: {
         latitude: null,
@@ -93,11 +94,12 @@ class Weather extends Component {
    * @param {boolean} isPreciseLocation 
    * @param {boolean} isFromLocalStorage
    */
-  updateLocationAndTriggerWeatherUpdate = (latitude, longitude, isPreciseLocation, isFromLocalStorage, city, country) => {
+  updateLocationAndTriggerWeatherUpdate = (latitude, longitude, isPreciseLocation, isLocationFromLocalStorage, isLocationFromGPS, city, country) => {
     this.setState({
       isLocationResponseReady: true,
       isPreciseLocation: isPreciseLocation,
-      isLocationFromLocalStorage: isFromLocalStorage,
+      isLocationFromLocalStorage: isLocationFromLocalStorage,
+      isLocationFromGPS: isLocationFromGPS,
       location: {
         latitude: latitude,
         longitude: longitude,
@@ -113,9 +115,10 @@ class Weather extends Component {
     }
 
     // if the geocoordinates are new and they are not from IP geocoding, store them in the browser local storage
-    if (isPreciseLocation && !isFromLocalStorage) {
+    if (isPreciseLocation && !isLocationFromLocalStorage) {
       window.localStorage.setItem('preciseLatitude', latitude);
       window.localStorage.setItem('preciseLongitude', longitude);
+      window.localStorage.setItem('isLocationFromGPS', isLocationFromGPS);
       if (city) {
         window.localStorage.setItem('preciseCity', city);
       }
@@ -249,36 +252,38 @@ class Weather extends Component {
   }
 
   render() {
-    const { isImperial, isPreciseLocation, isLocationFromLocalStorage, hourlyWeather, dailyWeather } = this.state;
+    const { isImperial, isPreciseLocation, isLocationFromLocalStorage, isLocationFromGPS, hourlyWeather, dailyWeather } = this.state;
     const { city, country } = this.state.location;
     const { temp, feelsLike, weatherMain, humidity, pressure, visibility, windSpeed, icon, sunrise, sunset } = this.state.currentWeather;
     const { isLocationResponseReady, isWeatherResponseReady, isReverseGeocodingResponseReady } = this.state;
+    const isDataReady =  isLocationResponseReady && isWeatherResponseReady && isReverseGeocodingResponseReady;
 
-    if (isLocationResponseReady && isWeatherResponseReady && isReverseGeocodingResponseReady) {
+    if (isDataReady) {
       return (
         <>
           <ToastContainer />
           <measureSystemContext.Provider value={{isImperial: isImperial, handler: this.handleMeasureSystemChange,}}>
             <locationContext.Provider 
-            value={{isPreciseLocation: isPreciseLocation, 
-              isFromLocalStorage: isLocationFromLocalStorage,
+            value={{
+              isLocationFromLocalStorage: isLocationFromLocalStorage,
+              isLocationFromGPS: isLocationFromGPS,
               locationFromNavigatorClickHandler: () => getLocationFromNavigator(this.updateLocationAndTriggerWeatherUpdate),
               onSearchLocationChange: this.updateLocationAndTriggerWeatherUpdate,
             }} 
             >
               <Background icon={icon} />
               <TopBar />
-              <CurrentWeatherWidget
+              <CurrentForecast
                 city={city} country={country}
                 temp={temp} feelsLike={feelsLike} main={weatherMain}
                 icon={icon}
               />
-              <HourlyWeatherWidget weather={hourlyWeather} />
-              <CurrentWeatherExtraWidget
+              <HourlyForecast weather={hourlyWeather} />
+              <CurrentForecastExtra
                 humidity={humidity} pressure={pressure} visibility={visibility} windSpeed={windSpeed}
                 sunrise={sunrise} sunset={sunset}
               />
-              <DailyWeatherWidget weather={dailyWeather} />
+              <DailyForecast weather={dailyWeather} />
             </locationContext.Provider>
           </measureSystemContext.Provider>
         </>
@@ -287,7 +292,7 @@ class Weather extends Component {
       return (
           <>
             <ToastContainer />
-            <CustomLoader 
+            <ProgressiveLoading 
             isLocationResponseReady={isLocationResponseReady}
             isWeatherResponseReady={isWeatherResponseReady}
             isReverseGeocodingResponseReady={isReverseGeocodingResponseReady} 
