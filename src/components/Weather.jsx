@@ -5,11 +5,12 @@ import { callReverseGeocodingApi, callWeatherApi } from './apiCalls';
 import { measureSystemContext, locationContext } from './context';
 import ProgressiveLoading from './ProgressiveLoading';
 import Background from './Background';
-import CurrentForecast from './CurrentForecast';
-import CurrentForecastExtra from './CurrentForecastExtra';
-import HourlyForecast from './HourlyForecast';
-import DailyForecast from './DailyForecast';
 import TopBar from './TopBar';
+import CurrentForecast from './CurrentForecast';
+import HourlyForecast from './HourlyForecast';
+import CurrentForecastExtra from './CurrentForecastExtra';
+import DailyForecast from './DailyForecast';
+import Footer from './Footer';
 
 /**
  * triggers a toast notification with the specified title and message
@@ -284,6 +285,7 @@ class Weather extends Component {
                 sunrise={sunrise} sunset={sunset}
               />
               <DailyForecast weather={dailyWeather} />
+              <Footer />
             </locationContext.Provider>
           </measureSystemContext.Provider>
         </>

@@ -15,13 +15,15 @@ const MainApp = styled.div`
   'main'
   'hourly'
   'extra'
-  'daily';
+  'daily'
+  'footer';
   @media screen and (min-width: 1024px) {
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
     'top-bar null'
     'main extra'
-    'hourly daily';
+    'hourly daily'
+    'footer footer';
   }
   h2 {
     margin-top: 1rem;
