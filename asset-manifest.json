@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/breeze-weather-react/static/css/main.8c6370cd.chunk.css",
-    "main.js": "/breeze-weather-react/static/js/main.5ccbaae0.chunk.js",
-    "main.js.map": "/breeze-weather-react/static/js/main.5ccbaae0.chunk.js.map",
+    "main.js": "/breeze-weather-react/static/js/main.91e9fea5.chunk.js",
+    "main.js.map": "/breeze-weather-react/static/js/main.91e9fea5.chunk.js.map",
     "runtime-main.js": "/breeze-weather-react/static/js/runtime-main.e78ad38a.js",
     "runtime-main.js.map": "/breeze-weather-react/static/js/runtime-main.e78ad38a.js.map",
     "static/css/2.52e7710a.chunk.css": "/breeze-weather-react/static/css/2.52e7710a.chunk.css",
-    "static/js/2.8c7ee14d.chunk.js": "/breeze-weather-react/static/js/2.8c7ee14d.chunk.js",
-    "static/js/2.8c7ee14d.chunk.js.map": "/breeze-weather-react/static/js/2.8c7ee14d.chunk.js.map",
+    "static/js/2.e0c76a36.chunk.js": "/breeze-weather-react/static/js/2.e0c76a36.chunk.js",
+    "static/js/2.e0c76a36.chunk.js.map": "/breeze-weather-react/static/js/2.e0c76a36.chunk.js.map",
     "static/js/3.b0d382f1.chunk.js": "/breeze-weather-react/static/js/3.b0d382f1.chunk.js",
     "static/js/3.b0d382f1.chunk.js.map": "/breeze-weather-react/static/js/3.b0d382f1.chunk.js.map",
     "index.html": "/breeze-weather-react/index.html",
     "static/css/2.52e7710a.chunk.css.map": "/breeze-weather-react/static/css/2.52e7710a.chunk.css.map",
     "static/css/main.8c6370cd.chunk.css.map": "/breeze-weather-react/static/css/main.8c6370cd.chunk.css.map",
-    "static/js/2.8c7ee14d.chunk.js.LICENSE.txt": "/breeze-weather-react/static/js/2.8c7ee14d.chunk.js.LICENSE.txt",
+    "static/js/2.e0c76a36.chunk.js.LICENSE.txt": "/breeze-weather-react/static/js/2.e0c76a36.chunk.js.LICENSE.txt",
     "static/media/01d1.71bc6533.jpg": "/breeze-weather-react/static/media/01d1.71bc6533.jpg",
     "static/media/01d2.17231aae.png": "/breeze-weather-react/static/media/01d2.17231aae.png",
     "static/media/01n1.16cc5614.jpg": "/breeze-weather-react/static/media/01n1.16cc5614.jpg",
@@ -30,13 +30,13 @@
     "static/media/04d2.cc3b2416.png": "/breeze-weather-react/static/media/04d2.cc3b2416.png",
     "static/media/04n1.d65cb617.jpg": "/breeze-weather-react/static/media/04n1.d65cb617.jpg",
     "static/media/04n2.e7f06980.png": "/breeze-weather-react/static/media/04n2.e7f06980.png",
-    "static/media/09d1.c1e496f0.jpg": "/breeze-weather-react/static/media/09d1.c1e496f0.jpg",
+    "static/media/09d1.f0fa2e2d.jpg": "/breeze-weather-react/static/media/09d1.f0fa2e2d.jpg",
     "static/media/09d2.a7c0fb5b.png": "/breeze-weather-react/static/media/09d2.a7c0fb5b.png",
-    "static/media/09n1.6ed26cb1.jpg": "/breeze-weather-react/static/media/09n1.6ed26cb1.jpg",
+    "static/media/09n1.c5229491.jpg": "/breeze-weather-react/static/media/09n1.c5229491.jpg",
     "static/media/09n2.a7c0fb5b.png": "/breeze-weather-react/static/media/09n2.a7c0fb5b.png",
-    "static/media/10d1.c1e496f0.jpg": "/breeze-weather-react/static/media/10d1.c1e496f0.jpg",
+    "static/media/10d1.f0fa2e2d.jpg": "/breeze-weather-react/static/media/10d1.f0fa2e2d.jpg",
     "static/media/10d2.a7c0fb5b.png": "/breeze-weather-react/static/media/10d2.a7c0fb5b.png",
-    "static/media/10n1.6ed26cb1.jpg": "/breeze-weather-react/static/media/10n1.6ed26cb1.jpg",
+    "static/media/10n1.c5229491.jpg": "/breeze-weather-react/static/media/10n1.c5229491.jpg",
     "static/media/10n2.a7c0fb5b.png": "/breeze-weather-react/static/media/10n2.a7c0fb5b.png",
     "static/media/11d1.612e6fa6.jpg": "/breeze-weather-react/static/media/11d1.612e6fa6.jpg",
     "static/media/11d2.02800b18.png": "/breeze-weather-react/static/media/11d2.02800b18.png",
@@ -56,8 +56,8 @@
   "entrypoints": [
     "static/js/runtime-main.e78ad38a.js",
     "static/css/2.52e7710a.chunk.css",
-    "static/js/2.8c7ee14d.chunk.js",
+    "static/js/2.e0c76a36.chunk.js",
     "static/css/main.8c6370cd.chunk.css",
-    "static/js/main.5ccbaae0.chunk.js"
+    "static/js/main.91e9fea5.chunk.js"
   ]
 }
