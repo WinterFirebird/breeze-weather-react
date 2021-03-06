@@ -35,7 +35,7 @@ class Footer extends Component {
       <FooterWrapper>
         <footer>
           <p>
-            Made with <Icon name="heart outline icon" /> by <a href="https://github.com/armanDark" target="_blank">Arman Grigoryan</a>
+            Made with <Icon name='heart outline' /> by <a href='https://github.com/armanDark' target='_blank'>Arman Grigoryan</a>
           </p>
           <p>powered by OpenWeather™ API</p>
         </footer>

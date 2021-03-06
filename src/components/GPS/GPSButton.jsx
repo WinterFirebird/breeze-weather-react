@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
-import { locationContext } from './context';
+import { locationContext } from '../../context';
 
 const TransparentButton = styled.button`
   background: none;
