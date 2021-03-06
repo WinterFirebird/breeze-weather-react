@@ -1,4 +1,3 @@
-// import logo from './logo.svg';
 import { React, Fragment } from 'react';
 import GlobalStyle from './components/globalStyles.js';
 import styled from 'styled-components';

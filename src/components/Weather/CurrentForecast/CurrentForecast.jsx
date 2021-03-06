@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { measureSystemContext } from './context';
-import { convertKelvinTo } from './tempConvert';
-import { countryCodeToName } from './countryNames';
-import { mainIcons } from './media';
-import MeasureSystemSwitcher from './MeasureSystemSwitcher';
+import { measureSystemContext } from '../../../context';
+import { convertKelvinTo } from '../../../utils/tempConvert';
+import { countryCodeToName } from '../../../utils/countryNames';
+import { mainIcons } from '../../../assets';
+import MeasureSystemSwitcher from '../../MeasureSystemSwitcher';
 
 const Wrapper = styled.div`
   grid-area: main;

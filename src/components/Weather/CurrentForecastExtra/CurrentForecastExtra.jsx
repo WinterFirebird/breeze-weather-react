@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { measureSystemContext } from './context';
-import { extraIcons } from './media';
-import { epochTimeToLocalTime } from './getDate';
+import { measureSystemContext } from '../../../context';
+import { extraIcons } from '../../../assets';
+import { epochTimeToLocalTime } from '../../../utils/getDate';
 
 const Wrapper = styled.div`
   grid-area: extra;

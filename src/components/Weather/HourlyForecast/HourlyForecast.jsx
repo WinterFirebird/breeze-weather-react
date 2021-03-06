@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { measureSystemContext } from './context';
-import { hoursHoursFromNow } from './getDate';
-import { convertKelvinTo } from './tempConvert';
-import { mainIcons } from './media';
+import { measureSystemContext } from '../../../context';
+import { hoursHoursFromNow } from '../../../utils/getDate';
+import { convertKelvinTo } from '../../../utils/tempConvert';
+import { mainIcons } from '../../../assets';
 
 const Wrapper = styled.div`
   grid-area: hourly;
