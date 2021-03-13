@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { measureSystemContext } from '../../../context';
-import { extraIcons } from '../../../assets';
 import { epochTimeToLocalTime } from '../../../utils/getDate';
+import { WiHumidity, WiWindDeg, WiBarometer, WiHorizonAlt, WiSunrise, WiSunset } from 'react-icons/wi';
 
 const Wrapper = styled.div`
   grid-area: extra;
@@ -55,14 +55,14 @@ const Grid = styled.div`
 `;
 
 const Element = styled.div`
-  img {
-    width: 100%;
-    max-width: 100px;
-  };
+  margin: 1rem auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  svg {
+    font-size: 6rem !important;
+  };
 `;
 
 class CurrentForecastExtra extends Component {
@@ -78,32 +78,32 @@ class CurrentForecastExtra extends Component {
       <Wrapper>
         <Grid>
           <Element>
-            <img src={extraIcons.humidity} alt="humidity" />
+            <WiHumidity />
             <h4>humidity</h4>
             <p>{humidity} %</p>
           </Element>
           <Element>
-            <img src={extraIcons.wind} alt="wind" />
+            <WiWindDeg />
             <h4>wind</h4>
             <p>{windSpeed}m/s</p>
           </Element>
           <Element>
-            <img src={extraIcons.pressure} alt="pressure" />
+            <WiBarometer />
             <h4>pressure</h4>
             <p>{pressure}hPa</p>
           </Element>
           <Element>
-            <img src={extraIcons.visibility} alt="eye" />
+            <WiHorizonAlt />
             <h4>visibility</h4>
             <p>{visibility}m</p>
           </Element>
           <Element>
-            <img src={extraIcons.sunrise} alt="sunrise" />
+            <WiSunrise />
             <h4>sunrise</h4>
             <p>{sunriseLocal}</p>
           </Element>
           <Element>
-            <img src={extraIcons.sunset} alt="sunset" />
+            <WiSunset />
             <h4>sunset</h4>
             <p>{sunsetLocal}</p>
           </Element>
