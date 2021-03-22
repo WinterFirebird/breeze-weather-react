@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/breeze-weather-react/static/css/main.8c6370cd.chunk.css",
-    "main.js": "/breeze-weather-react/static/js/main.5716349f.chunk.js",
-    "main.js.map": "/breeze-weather-react/static/js/main.5716349f.chunk.js.map",
+    "main.js": "/breeze-weather-react/static/js/main.b4cc7ad4.chunk.js",
+    "main.js.map": "/breeze-weather-react/static/js/main.b4cc7ad4.chunk.js.map",
     "runtime-main.js": "/breeze-weather-react/static/js/runtime-main.f1be4a6b.js",
     "runtime-main.js.map": "/breeze-weather-react/static/js/runtime-main.f1be4a6b.js.map",
     "static/css/2.52e7710a.chunk.css": "/breeze-weather-react/static/css/2.52e7710a.chunk.css",
@@ -61,6 +61,6 @@
     "static/css/2.52e7710a.chunk.css",
     "static/js/2.b15e4347.chunk.js",
     "static/css/main.8c6370cd.chunk.css",
-    "static/js/main.5716349f.chunk.js"
+    "static/js/main.b4cc7ad4.chunk.js"
   ]
 }
