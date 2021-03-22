@@ -28,7 +28,6 @@ const LocationWrapper = styled.div`
         flex-basis: auto;
         flex-grow: 1;
         flex-shrink: 1;
-        max-width: 55vw;
       };
     };
   }
