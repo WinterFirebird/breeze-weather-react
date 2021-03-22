@@ -61,7 +61,10 @@ const Element = styled.div`
   justify-content: space-between;
   align-items: center;
   svg {
-    font-size: 6rem !important;
+    font-size: 6rem;
+    @media screen and (max-width: 480px) {
+      font-size: 4rem;
+    }
   };
 `;
 
